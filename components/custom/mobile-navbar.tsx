@@ -21,10 +21,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 const MobileNavbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const pathName = window.location.pathname;
+  const pathName = usePathname();
   const handleLinkClick = () => {
     setIsOpen(false); // Close the sheet
   };
