@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const transition = {
   type: "spring",
@@ -114,10 +116,14 @@ export const ProductItem = ({
 };
 
 export const HoveredLink = ({ children, ...rest }: any) => {
+  const pathName = usePathname();
   return (
     <Link
       {...rest}
-      className="text-neutral-700 dark:text-neutral-200 hover:text-primary"
+      className={cn(
+        "text-neutral-700 dark:text-neutral-200 hover:text-primary",
+        pathName === rest.href && "text-primary",
+      )}
     >
       {children}
     </Link>
