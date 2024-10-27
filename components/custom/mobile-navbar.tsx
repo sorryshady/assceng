@@ -44,7 +44,7 @@ const MobileNavbar = () => {
         </SheetTrigger>
         <SheetContent
           side="right"
-          className="w-[300px] sm:w-[400px] pt-10 bg-white text-black"
+          className="w-[300px] sm:w-[400px] pt-10 bg-white text-black overflow-auto"
         >
           <SheetHeader>
             <SheetTitle className="text-left">Menu</SheetTitle>
