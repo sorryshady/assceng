@@ -89,10 +89,11 @@ export const registerSchema = z.object({
   ),
   phoneNumber: z
     .string()
-    .regex(
-      /^(\+91)?\d{10}$/,
-      "Phone number must be exactly 10 digits or start with +91 followed by 10 digits",
-    ),
+    .optional() // Make it optional first
+    .refine((value) => !value || /^(\+91)?\d{10}$/.test(value), {
+      message:
+        "Phone number must be exactly 10 digits or start with +91 followed by 10 digits",
+    }),
 
   mobileNumber: z
     .string({
@@ -116,9 +117,9 @@ export const registerSchema = z.object({
     .min(3, { message: "Locality must be at least 3 characters long" }),
   photo: z
     .instanceof(File)
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
+    .refine((file) => file.size <= 4 * 1024 * 1024, {
       // 5MB limit
-      message: "File size should be less than 5MB",
+      message: "File size should be less than 4MB",
     })
     .refine(
       (file) => ["image/jpeg", "image/jpg", "image/png"].includes(file.type),

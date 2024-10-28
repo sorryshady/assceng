@@ -5,7 +5,6 @@ import { registerSchema } from "@/lib/register-schema";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -39,8 +38,12 @@ import { Calendar } from "../ui/calendar";
 import { toast } from "sonner";
 import { useState } from "react";
 import Link from "next/link";
+import { useUploadThing } from "@/lib/uploadthing";
+import { registerUser } from "@/actions/register-user";
+import { findUserEmail } from "@/actions/find-user-email";
 const RegisterForm = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const { startUpload } = useUploadThing("imageUploader");
   const [success, setSuccess] = useState<boolean>(false);
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -65,24 +68,34 @@ const RegisterForm = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof registerSchema>) => {
-    console.log(data.photo);
+  const onSubmit = async (data: z.infer<typeof registerSchema>) => {
     try {
-      console.log(data);
       setIsSubmitting(true);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>,
-      );
-      setTimeout(() => {
+
+      const user = await findUserEmail(data.email);
+      console.log(user);
+      if (user) {
+        toast.error("User already exists");
+        setIsSubmitting(false);
+        return;
+      } else {
+        if (data.photo) {
+          const res = await startUpload([data.photo!], {});
+          if (res) {
+            await registerUser(data, res[0].url);
+          }
+        } else {
+          await registerUser(data, "");
+        }
+        toast.success("Form submitted successfully");
         setIsSubmitting(false);
         setSuccess(true);
-      }, 4000);
-      form.reset();
+        form.reset();
+      }
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
+      setIsSubmitting(false);
     }
   };
 
@@ -424,6 +437,7 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
+              disabled={isSubmitting}
               name="dateOfBirth"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
@@ -468,6 +482,7 @@ const RegisterForm = () => {
             />
             <FormField
               control={form.control}
+              disabled={isSubmitting}
               name="locality"
               render={({ field }) => (
                 <FormItem>
@@ -482,6 +497,7 @@ const RegisterForm = () => {
             <FormField
               control={form.control}
               name="photo"
+              disabled={isSubmitting}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Profile Picture</FormLabel>
@@ -516,9 +532,17 @@ const RegisterForm = () => {
             Your data has been successfully submitted. You will receive a
             confirmation email once your account has been verified.
           </p>
-          <Button asChild className="mx-auto">
-            <Link href={"/"}>Go to Home</Link>
-          </Button>
+          <div className="flex flex-col gap-5">
+            <Button
+              className="mx-auto w-full"
+              onClick={() => setSuccess(false)}
+            >
+              New Registration
+            </Button>
+            <Button asChild className="mx-auto w-full">
+              <Link href={"/"}>Go to Home</Link>
+            </Button>
+          </div>
         </div>
       )}
     </>
