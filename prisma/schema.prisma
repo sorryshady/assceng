@@ -74,13 +74,13 @@ model User {
     gender           Gender
     permanentAddress String
     homeDistrict     District
-    phoneNumber      String
+    phoneNumber      String?
     mobileNumber     String
     bloodGroup       String
     dateOfBirth      DateTime
     locality         String
-    photoUrl         String
-    membershipNumber Int              @unique
-    userRole         UserRole
+    photoUrl         String?
+    membershipNumber Int?              @unique
+    userRole         UserRole         @default(REGULAR)
     verifiedStatus   Boolean          @default(false)
 }
