@@ -47,7 +47,7 @@ const RegisterForm = () => {
     defaultValues: {
       name: "",
       department: undefined,
-      inService: "yes",
+      inService: true,
       designation: undefined,
       officeAddress: "",
       workingDistrict: undefined,
@@ -127,9 +127,9 @@ const RegisterForm = () => {
                     <SelectContent>
                       {department.map((item) => (
                         <CustomSelectItem
-                          key={item}
-                          value={item}
-                          label={item}
+                          key={item.value}
+                          value={item.value}
+                          label={item.label}
                         />
                       ))}
                     </SelectContent>
@@ -147,8 +147,8 @@ const RegisterForm = () => {
                   <FormLabel>In Service?</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      onValueChange={(value) => field.onChange(value === "yes")}
+                      defaultValue={field.value ? "yes" : "no"}
                       className="flex space-x-5"
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
@@ -188,9 +188,9 @@ const RegisterForm = () => {
                     <SelectContent>
                       {designation.map((item) => (
                         <CustomSelectItem
-                          key={item}
-                          value={item}
-                          label={item}
+                          key={item.value}
+                          value={item.value}
+                          label={item.label}
                         />
                       ))}
                     </SelectContent>
@@ -232,9 +232,9 @@ const RegisterForm = () => {
                     <SelectContent>
                       {district.map((item) => (
                         <CustomSelectItem
-                          key={item}
-                          value={item}
-                          label={item}
+                          key={item.value}
+                          value={item.value}
+                          label={item.label}
                         />
                       ))}
                     </SelectContent>
@@ -262,9 +262,9 @@ const RegisterForm = () => {
                     <SelectContent>
                       {employmentStatus.map((item) => (
                         <CustomSelectItem
-                          key={item}
-                          value={item}
-                          label={item}
+                          key={item.value}
+                          value={item.value}
+                          label={item.label}
                         />
                       ))}
                     </SelectContent>
@@ -306,9 +306,9 @@ const RegisterForm = () => {
                     <SelectContent>
                       {gender.map((item) => (
                         <CustomSelectItem
-                          key={item}
-                          value={item}
-                          label={item}
+                          key={item.value}
+                          value={item.value}
+                          label={item.label}
                         />
                       ))}
                     </SelectContent>
@@ -353,9 +353,9 @@ const RegisterForm = () => {
                     <SelectContent>
                       {district.map((item) => (
                         <CustomSelectItem
-                          key={item}
-                          value={item}
-                          label={item}
+                          key={item.value}
+                          value={item.value}
+                          label={item.label}
                         />
                       ))}
                     </SelectContent>
