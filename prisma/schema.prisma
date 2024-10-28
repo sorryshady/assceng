@@ -56,12 +56,31 @@ enum Gender {
     TRANSGENDER
 }
 
+enum UserRole {
+    ADMIN
+    REGULAR
+}
+
 model User {
-    id               Int         @id @default(autoincrement())
+    id               Int              @id @default(autoincrement())
     name             String
     department       Department
     inService        Boolean
     designation      Designation
-    membershipNumber Int         @unique
-    email            String      @unique
+    officeAddress    String
+    workingDistrict  District
+    employmentStatus EmploymentStatus
+    email            String           @unique
+    gender           Gender
+    permanentAddress String
+    homeDistrict     District
+    phoneNumber      String
+    mobileNumber     String
+    bloodGroup       String
+    dateOfBirth      DateTime
+    locality         String
+    photoUrl         String
+    membershipNumber Int              @unique
+    userRole         UserRole
+    verifiedStatus   Boolean          @default(false)
 }
