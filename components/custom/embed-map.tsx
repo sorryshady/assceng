@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 
 const EmbedMap = () => {
   const [mapDimension, setMapDimension] = useState({
-    width: window.innerWidth,
-    height: 350,
+    width: 0,
+    height: 0,
   });
 
   useEffect(() => {
