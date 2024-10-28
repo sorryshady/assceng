@@ -11,8 +11,8 @@ const Navbar = () => {
   const pathname = usePathname();
   const [active, setActive] = React.useState<string | null>(null);
   return (
-    <nav className="w-full">
-      <div className="max-w-7xl mx-auto hidden justify-between items-center p-5 bg-transparent lg:flex">
+    <nav className="w-full border shadow-md">
+      <div className="max-w-7xl mx-auto hidden justify-between items-center p-5  lg:flex">
         <Link href="/">
           <Image src="/assceng_logo.png" alt="logo" width={300} height={300} />
         </Link>
