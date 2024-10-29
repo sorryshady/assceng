@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import Link, { LinkProps } from "next/link";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -115,14 +115,17 @@ export const ProductItem = ({
   );
 };
 
-export const HoveredLink = ({ children, ...rest }: any) => {
+type HoveredLinkProps = LinkProps & {
+  children: React.ReactNode;
+};
+export const HoveredLink = ({ children, ...rest }: HoveredLinkProps) => {
   const pathName = usePathname();
   return (
     <Link
       {...rest}
       className={cn(
         "text-neutral-700 dark:text-neutral-200 hover:text-primary",
-        pathName === rest.href && "text-primary"
+        pathName === rest.href && "text-primary",
       )}
     >
       {children}
