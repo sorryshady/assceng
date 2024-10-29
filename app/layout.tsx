@@ -6,6 +6,7 @@ import MobileNavbar from "@/components/custom/mobile-navbar";
 import { Toaster } from "sonner";
 import Footer from "@/components/custom/footer";
 import SmoothScrolling from "@/components/custom/smooth-scrolling";
+import ScrollToTop from "@/components/custom/scroll-to-top";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,6 +41,7 @@ export default function RootLayout({
           {children}
           <Toaster />
           <Footer />
+          <ScrollToTop />
         </body>
       </html>
     </>
