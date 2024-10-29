@@ -1,3 +1,5 @@
+import Wrapper from "@/components/custom/wrapper";
+
 export default function Gallery() {
-  return <div>Gallery Page</div>;
+  return <Wrapper>Gallery Page</Wrapper>;
 }

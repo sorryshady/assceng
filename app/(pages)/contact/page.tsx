@@ -1,11 +1,12 @@
 import ContactForm from "@/components/custom/contact-form";
 import EmbedMap from "@/components/custom/embed-map";
+import Wrapper from "@/components/custom/wrapper";
 import { Separator } from "@/components/ui/separator";
 import { MailOpen, MapPin, Phone } from "lucide-react";
 
 export default function Contact() {
   return (
-    <div className="max-w-7xl mx-auto p-5 space-y-16">
+    <Wrapper>
       <h1 className="text-5xl font-bold text-center">Contact Us</h1>
       <div className="flex gap-10 lg:gap-5 lg:flex-row flex-col-reverse">
         <div className="w-full lg:w-1/3 space-y-8 border p-8 rounded-md shadow-md bg-primary-foreground">
@@ -65,6 +66,6 @@ export default function Contact() {
         </div>
       </div>
       <EmbedMap />
-    </div>
+    </Wrapper>
   );
 }

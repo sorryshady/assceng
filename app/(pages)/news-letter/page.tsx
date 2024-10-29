@@ -1,3 +1,5 @@
+import Wrapper from "@/components/custom/wrapper";
+
 export default function NewsLetter() {
-  return <div>News Letter Page</div>;
+  return <Wrapper>News Letter Page</Wrapper>;
 }

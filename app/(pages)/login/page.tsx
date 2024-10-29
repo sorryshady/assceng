@@ -1,3 +1,5 @@
+import Wrapper from "@/components/custom/wrapper";
+
 export default function Login() {
-  return <div>Login Page</div>;
+  return <Wrapper>Login Page</Wrapper>;
 }
