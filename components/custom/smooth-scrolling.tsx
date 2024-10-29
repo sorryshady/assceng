@@ -6,16 +6,7 @@ const SmoothScrolling = () => {
     <ReactLenis
       options={{
         prevent(node) {
-          return (
-            node.id === "radix-:Ril7:" ||
-            node.id === "slider" ||
-            node.id === "desktop-menu" ||
-            node.id === "mobile-menu" ||
-            node.id === "treatment" ||
-            node.id === "overlay" ||
-            (node.getAttribute("data-state") === "open" &&
-              node.classList.contains("fixed"))
-          );
+          return node.id === "radix-:Ril7:" || node.id === "mobile-menu";
         },
       }}
       root

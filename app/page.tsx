@@ -1,4 +1,6 @@
 import Hero from "@/components/custom/hero";
+import NewsHome from "@/components/custom/news-home";
+import EventsHome from "@/components/custom/upcoming-events";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
@@ -68,7 +70,7 @@ export default function Home() {
           </Card>
         </section>
         <section className="container mx-auto pb-12 px-4">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          <h2 className="text-3xl font-bold text-center text-primary mb-8">
             Featured Videos
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -94,8 +96,8 @@ export default function Home() {
             </div>
           </div>
         </section>
-        {/* <EventsHome />
-        <NewsHome /> */}
+        <EventsHome />
+        <NewsHome />
       </div>
     </main>
   );
