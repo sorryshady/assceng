@@ -57,7 +57,9 @@ const FooterLinks = ({ label, href }: { label: string; href: string }) => {
   return (
     <div className="flex items-center hover:text-primary">
       <ChevronRight size={18} />
-      <Link href={href}>{label}</Link>
+      <Link href={href} target="_blank">
+        {label}
+      </Link>
     </div>
   );
 };

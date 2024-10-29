@@ -45,7 +45,7 @@ export const MenuItem = ({
           transition={transition}
         >
           {active === item && (
-            <div className="absolute top-[calc(100%)] left-1/2 transform -translate-x-1/2 pt-4">
+            <div className="absolute top-[calc(100%)] left-1/2 transform -translate-x-1/2 pt-4 ">
               <motion.div
                 transition={transition}
                 layoutId="active" // layoutId ensures smooth animation
@@ -122,7 +122,7 @@ export const HoveredLink = ({ children, ...rest }: any) => {
       {...rest}
       className={cn(
         "text-neutral-700 dark:text-neutral-200 hover:text-primary",
-        pathName === rest.href && "text-primary",
+        pathName === rest.href && "text-primary"
       )}
     >
       {children}

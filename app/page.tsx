@@ -1,4 +1,8 @@
+import HomeComponent from "@/components/custom/home";
 export default function Home() {
-  return <div>Hello World</div>;
+  return (
+    <main>
+      <HomeComponent />
+    </main>
+  );
 }
-
