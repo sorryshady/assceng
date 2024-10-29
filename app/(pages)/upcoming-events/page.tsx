@@ -1,3 +1,5 @@
+import Wrapper from "@/components/custom/wrapper";
+
 export default function UpcomingEvents() {
-  return <div>Upcoming Events</div>;
+  return <Wrapper>Upcoming Events</Wrapper>;
 }

@@ -1,20 +1,19 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { simpleNewsCard } from "@/lib/interface";
 import { client, urlFor } from "@/lib/sanity";
-import { PortableText } from "@portabletext/react";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 async function getData() {
-  const query = `*[_type == "news"]| order(_createdAt desc) [0..2] { 
+  const query = `*[_type == "news"]| order(_createdAt desc) [0..2] {
     title,
     image,
     description,
     content,
     date,
-    "currentSlug": slug.current 
+    "currentSlug": slug.current
   }`;
   const data = await client.fetch(query);
   return data;
@@ -64,9 +63,6 @@ export default async function NewsHome() {
                 <p className="text-muted-foreground mb-4 line-clamp-3">
                   {post.description}
                 </p>
-                <div className="text-muted-foreground mb-4 line-clamp-3">
-                  <PortableText value={post.content} />
-                </div>
                 <Link
                   href={`/news/${post.currentSlug}`}
                   className="text-primary font-semibold hover:underline inline-flex items-center"

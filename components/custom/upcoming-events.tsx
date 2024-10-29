@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { simpleNewsCard } from "@/lib/interface";
 import { client, urlFor } from "@/lib/sanity";
 import Image from "next/image";
@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 async function getData() {
-  const query = `*[_type == "upcomingEvent"]| order(_createdAt desc) [0..2] { 
+  const query = `*[_type == "upcomingEvent"]| order(_createdAt desc) [0..2] {
     title,
     image,
     description,

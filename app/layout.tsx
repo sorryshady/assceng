@@ -5,6 +5,7 @@ import Navbar from "@/components/custom/navbar";
 import MobileNavbar from "@/components/custom/mobile-navbar";
 import { Toaster } from "sonner";
 import Footer from "@/components/custom/footer";
+import SmoothScrolling from "@/components/custom/smooth-scrolling";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,16 +29,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
-      >
-        <Navbar />
-        <MobileNavbar />
-        {children}
-        <Toaster />
-        <Footer />
-      </body>
-    </html>
+    <>
+      <SmoothScrolling />
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
+        >
+          <Navbar />
+          <MobileNavbar />
+          {children}
+          <Toaster />
+          <Footer />
+        </body>
+      </html>
+    </>
   );
 }
