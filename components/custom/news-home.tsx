@@ -74,6 +74,11 @@ export default async function NewsHome() {
             </Card>
           ))}
         </div>
+        <Link href="/news">
+          <button className="w-full bg-primary rounded-sm p-1 mt-5 text-white ">
+            Load More
+          </button>
+        </Link>
       </section>
     </div>
   );
