@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { downloadsList } from "@/lib/interface";
 import { client } from "@/lib/sanity";
 import { heading, toCamelCase } from "@/lib/utils";
+import { useAuth } from "@clerk/nextjs";
 
 type Params = Promise<{ downloads: string }>;
 

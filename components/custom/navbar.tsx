@@ -6,7 +6,7 @@ import { HoveredLink, Menu, MenuItem } from "../ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { menuItems } from "@/lib/navbar-data";
-import { useAuth } from "@clerk/nextjs"; // Import Clerk's useAuth hook
+import { useAuth, UserButton } from "@clerk/nextjs"; // Import Clerk's useAuth hook
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const Navbar = () => {
@@ -24,13 +24,14 @@ const Navbar = () => {
           {menuItems.map((item) =>
             item.label === "Account" ? (
               isSignedIn ? (
-                <Link key="user" href={"/account"}>
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                </Link>
+                <UserButton key={"user"} />
               ) : (
+                // <Link key="user" href={"/account"}>
+                //   <Avatar>
+                //     <AvatarImage src="https://github.com/shadcn.png" />
+                //     <AvatarFallback>CN</AvatarFallback>
+                //   </Avatar>
+                // </Link>
                 <MenuItem
                   key={item.label}
                   setActive={setActive}
