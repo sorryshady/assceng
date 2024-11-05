@@ -68,7 +68,8 @@ enum CommitteeRole {
 }
 
 model User {
-    id               Int              @id @default(autoincrement())
+    id               String           @id @default(cuid())
+    clerkId          String           @unique
     name             String
     department       Department
     inService        Boolean
