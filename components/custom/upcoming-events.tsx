@@ -5,6 +5,7 @@ import { client, urlFor } from "@/lib/sanity";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { Button } from "../ui/button";
 
 function isEventOver(eventDate: string): boolean {
   const currentDate = new Date();
@@ -13,7 +14,7 @@ function isEventOver(eventDate: string): boolean {
 }
 
 async function getData() {
-  const query = `*[_type == "upcomingEvent"]| order(_createdAt desc) [0..2] {
+  const query = `*[_type == "upcomingEvent"]| order(date desc) [0..2] {
     title,
     image,
     description,
@@ -27,7 +28,7 @@ export default async function EventsHome() {
   const data: simpleNewsCard[] = await getData();
 
   return (
-    <div className="max-h-screen bg-gray-50">
+    <div className="bg-gray-50">
       <section className="container mx-auto py-12 px-4">
         <h1 className="text-center mb-10 text-primary font-bold text-4xl">
           Upcoming Events
@@ -46,9 +47,9 @@ export default async function EventsHome() {
                   >
                     {eventOver
                       ? "Past Event"
-                      : new Date(post.date).toLocaleDateString("en-US", {
+                      : new Date(post.date).toLocaleDateString("en-IN", {
                           year: "numeric",
-                          month: "2-digit",
+                          month: "short",
                           day: "2-digit",
                         })}
                   </div>
@@ -96,11 +97,9 @@ export default async function EventsHome() {
           })}
         </div>
         {data.some((post) => !isEventOver(post.date)) && (
-          <Link href="/upcoming-events">
-            <button className="w-full bg-primary rounded-sm p-1 mt-5 text-white ">
-              Load More
-            </button>
-          </Link>
+          <Button asChild className="w-full mt-5 font-semibold">
+            <Link href="/upcoming-events">View All</Link>
+          </Button>
         )}
       </section>
     </div>

@@ -8,6 +8,10 @@ export interface simpleNewsCard {
   image: Image;
   date: string;
 }
+export interface downloadsList {
+    title: string;
+    fileUrl: string;
+}
 export interface upcomingEvent {
   title: string;
   description: string;

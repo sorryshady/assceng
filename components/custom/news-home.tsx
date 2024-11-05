@@ -5,9 +5,10 @@ import { client, urlFor } from "@/lib/sanity";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 async function getData() {
-  const query = `*[_type == "news"]| order(_createdAt desc) [0..2] {
+  const query = `*[_type == "news"]| order(date desc) [0..2] {
     title,
     image,
     description,
@@ -22,19 +23,19 @@ async function getData() {
 export default async function NewsHome() {
   const data: simpleNewsCard[] = await getData();
   return (
-    <div className="max-h-svh bg-gray-50 pb-12">
+    <div className="bg-gray-50 ">
       <section className="container mx-auto py-12 px-4">
         <h1 className="text-center mb-10 text-primary font-bold text-4xl">
           Latest News
         </h1>
-        <div className="grid grid-cols-3  gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-6">
           {data.map((post) => (
             <Card key={post.currentSlug} className="overflow-hidden">
               <div className="relative">
                 <div className="absolute top-4 left-4 bg-yellow-500 text-white px-2 py-1 text-sm font-semibold rounded">
-                  {new Date(post.date).toLocaleDateString("en-US", {
+                  {new Date(post.date).toLocaleDateString("en-IN", {
                     year: "numeric",
-                    month: "2-digit",
+                    month: "short",
                     day: "2-digit",
                   })}
                 </div>
@@ -74,11 +75,9 @@ export default async function NewsHome() {
             </Card>
           ))}
         </div>
-        <Link href="/news">
-          <button className="w-full bg-primary rounded-sm p-1 mt-5 text-white ">
-            Load More
-          </button>
-        </Link>
+        <Button asChild className="w-full mt-5 font-semibold">
+          <Link href="/news">View All</Link>
+        </Button>
       </section>
     </div>
   );

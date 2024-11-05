@@ -19,7 +19,6 @@ async function getData(slug: string) {
 }[0]
 `;
   const data = await client.fetch(query);
-  console.log(data);
   return data;
 }
 export default async function NewsPage({ params }: { params: Params }) {
