@@ -61,6 +61,12 @@ enum UserRole {
     REGULAR
 }
 
+enum CommitteeRole {
+    NONE
+    STATE
+    DISTRICT
+}
+
 model User {
     id               Int              @id @default(autoincrement())
     name             String
@@ -80,7 +86,8 @@ model User {
     dateOfBirth      DateTime
     locality         String
     photoUrl         String?
-    membershipNumber Int?              @unique
+    membershipNumber Int?             @unique
+    committeeStatus  CommitteeRole    @default(NONE)
     userRole         UserRole         @default(REGULAR)
     verifiedStatus   Boolean          @default(false)
 }
