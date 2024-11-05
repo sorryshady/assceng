@@ -2,6 +2,7 @@
   "name": "assceng",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "bun run prisma generate && bun run build:next",
@@ -73,6 +74,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.2.0",
     "@sanity/types": "^3.62.2",
     "@types/node": "^20",
     "@types/react": "^18",
