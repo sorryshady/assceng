@@ -29,13 +29,13 @@ export default async function UpcomingEventsPage() {
   return (
     <Wrapper>
       <h1 className="text-4xl font-bold text-center my-8">Events</h1>
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-8 lg:grid-cols-2 grid-cols-1">
         {events.map((event, index) => {
           const eventOver = isEventOver(event.date);
           return (
             <Card
               key={index}
-              className={`min-w-[400px] mx-auto transition-opacity duration-300 ${eventOver ? "opacity-60" : ""}`} //min width doubt
+              className={`w-full mx-auto transition-opacity duration-300 ${eventOver ? "opacity-60" : ""}`} //min width doubt
             >
               <CardHeader>
                 <h2
@@ -83,7 +83,6 @@ export default async function UpcomingEventsPage() {
                 >
                   {event.description}
                 </p>
-                <Separator className="my-6" />
               </CardContent>
             </Card>
           );
