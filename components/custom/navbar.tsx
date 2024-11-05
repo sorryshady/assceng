@@ -27,11 +27,7 @@ const Navbar = () => {
               >
                 <div className="flex flex-col space-y-4 text-sm">
                   {item.subItems.map((subItm) => (
-                    <HoveredLink
-                      className="hover:text-primary"
-                      key={subItm.label}
-                      href={subItm.href}
-                    >
+                    <HoveredLink key={subItm.label} href={subItm.href}>
                       {subItm.label}
                     </HoveredLink>
                   ))}
