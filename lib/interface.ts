@@ -9,12 +9,18 @@ export interface simpleNewsCard {
   date: string;
 }
 export interface downloadsList {
-    title: string;
-    fileUrl: string;
+  title: string;
+  fileUrl: string;
 }
 export interface upcomingEvent {
   title: string;
   description: string;
   image: Image;
   date: string;
+}
+
+export interface GalleryData {
+  title: string;
+  images: any[];
+  currentSlug: string;
 }
