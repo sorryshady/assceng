@@ -53,7 +53,7 @@ enum EmploymentStatus {
 enum Gender {
     MALE
     FEMALE
-    TRANSGENDER
+    OTHER
 }
 
 enum UserRole {
