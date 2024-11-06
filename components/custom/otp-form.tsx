@@ -19,11 +19,16 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { OTPSchema } from "@/lib/otp-schema";
+import { FormError } from "./form-error";
+import { FormSuccess } from "./form-success";
 
 interface OTPProps {
   verify: (otpData: z.infer<typeof OTPSchema>) => Promise<void>;
+  error: string;
+  success: string;
+  submitting: boolean;
 }
-const OTPForm = ({ verify }: OTPProps) => {
+const OTPForm = ({ verify, error, success, submitting }: OTPProps) => {
   const form = useForm<z.infer<typeof OTPSchema>>({
     resolver: zodResolver(OTPSchema),
     defaultValues: {
@@ -35,7 +40,7 @@ const OTPForm = ({ verify }: OTPProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(verify)}
-        className="space-y-8 max-w-5xl mx-auto"
+        className="space-y-8 max-w-lg mx-auto"
       >
         <FormField
           control={form.control}
@@ -62,8 +67,11 @@ const OTPForm = ({ verify }: OTPProps) => {
             </FormItem>
           )}
         />
-
-        <Button type="submit">Submit</Button>
+        <FormError message={error} />
+        <FormSuccess message={success} />
+        <Button className="w-full" type="submit" disabled={submitting}>
+          Submit
+        </Button>
       </form>
     </Form>
   );

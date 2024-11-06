@@ -14,13 +14,21 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useSignIn } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { CardWrapper } from "./card-wrapper";
+import { useState } from "react";
+import ShowPassword from "./show-password";
+import { FormSuccess } from "./form-success";
+import { FormError } from "./form-error";
+import { findUserEmail } from "@/actions/find-user-email";
 import { toast } from "sonner";
-import { fetchClerkId } from "@/actions/fetch-clerkid";
-import { verifyClerkUser } from "@/actions/verify-clerk-user";
 
 const LoginForm = () => {
   const { isLoaded, signIn, setActive } = useSignIn();
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const router = useRouter();
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -32,68 +40,89 @@ const LoginForm = () => {
   });
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     if (!isLoaded) return;
+    setError("");
+    setSuccess("");
+    setSubmitting(true);
     try {
       const signInAttempt = await signIn.create({
         identifier: values.email,
         password: values.password,
       });
       if (signInAttempt.status === "complete") {
+        form.reset();
+        setSuccess("Login successful. Redirecting...");
+        const user = await findUserEmail(values.email);
+        toast.message("Account Incomplete");
         await setActive({ session: signInAttempt.createdSessionId });
-        router.push("/");
+        if (!user) {
+          router.push("/complete-account");
+        }
       } else {
+        setError("Incorrect email or password");
         console.error(JSON.stringify(signInAttempt, null, 2));
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      setError(err.errors[0].message);
       console.error(JSON.stringify(err.errors[0].message, null, 2));
-      toast.error(err.errors[0].message);
+    } finally {
+      setSubmitting(false);
     }
-    form.reset();
   };
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 max-w-lg mx-auto"
-      >
-        <FormField
-          control={form.control}
-          //   disabled={isSubmitting}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="Email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          //   disabled={isSubmitting}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input placeholder="password" type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button
-          className="w-full md:w-fit"
-          type="submit"
-          //   disabled={isSubmitting}
+    <CardWrapper
+      headerLabel="Login"
+      backButtonLabel="Don't have an account?"
+      backButtonHref="/register"
+    >
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 max-w-lg mx-auto"
         >
-          Login
-          {/* {isSubmitting ? "Submitting..." : "Submit"} */}
-        </Button>
-      </form>
-    </Form>
+          <FormField
+            control={form.control}
+            disabled={submitting}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            disabled={submitting}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="password"
+                    type={showPassword ? "text" : "password"}
+                    {...field}
+                  />
+                </FormControl>
+                <ShowPassword
+                  showPassword={showPassword}
+                  setShowPassword={setShowPassword}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormSuccess message={success} />
+          <FormError message={error} />
+          <Button className="w-full" type="submit" disabled={submitting}>
+            Submit
+          </Button>
+        </form>
+      </Form>
+    </CardWrapper>
   );
 };
 export default LoginForm;
