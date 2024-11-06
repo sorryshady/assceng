@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { menuItems } from "@/lib/navbar-data";
 import { useAuth, UserButton } from "@clerk/nextjs"; // Import Clerk's useAuth hook
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import SignOut from "./sign-out";
 
 const Navbar = () => {
   const { isSignedIn } = useAuth();
@@ -24,7 +25,8 @@ const Navbar = () => {
           {menuItems.map((item) =>
             item.label === "Account" ? (
               isSignedIn ? (
-                <UserButton key={"user"} />
+                // <UserButton key={"user"} />
+                <SignOut key={"user"} />
               ) : (
                 // <Link key="user" href={"/account"}>
                 //   <Avatar>

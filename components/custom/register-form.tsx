@@ -20,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
   bloodGroup,
   department,
@@ -32,7 +31,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { toast } from "sonner";
@@ -43,12 +42,16 @@ import { registerUser } from "@/actions/register-user";
 import { findUserEmail } from "@/actions/find-user-email";
 import { Label } from "../ui/label";
 import { useSignUp } from "@clerk/nextjs";
+import OTPForm from "./otp-form";
+import { OTPSchema } from "@/lib/otp-schema";
 const RegisterForm = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const { startUpload } = useUploadThing("imageUploader");
   const [success, setSuccess] = useState<boolean>(false);
+  const [verifying, setVerifying] = useState<boolean>(false);
+
+  const { startUpload } = useUploadThing("imageUploader");
   const { isLoaded, signUp, setActive } = useSignUp();
-    const [verifying, setVerifying] = useState<boolean>(false);
+
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -79,34 +82,63 @@ const RegisterForm = () => {
       setIsSubmitting(true);
       const user = await findUserEmail(data.email);
       if (user) {
-        toast.error("User already exists");
+        toast.error(
+          "Email already associated with an account. Use a different email or try logging in.",
+        );
         setIsSubmitting(false);
         return;
       } else {
-
-        let imgUrl = "";
-        if (data.photo) {
-          const res = await startUpload([data.photo!], {});
-          if (res) {
-            imgUrl = res[0].url;
-          }
-        }
-        await registerUser(data, imgUrl);
-        toast.success("Form submitted successfully");
-        setSuccess(true);
-        form.reset();
+        console.log("starting signup flow", data.password);
+        await signUp.create({
+          emailAddress: data.email,
+          password: data.password,
+        });
+        console.log("sending verification email");
+        await signUp.prepareEmailAddressVerification({
+          strategy: "email_code",
+        });
+        setVerifying(true);
+        // let imgUrl = "";
+        // if (data.photo) {
+        //   const res = await startUpload([data.photo!], {});
+        //   if (res) {
+        //     imgUrl = res[0].url;
+        //   }
+        // }
+        // await registerUser(data, imgUrl);
+        // toast.success("Form submitted successfully");
+        // setSuccess(true);
+        // form.reset();
       }
-    } catch (error) {
-      console.error("Form submission error", error);
+    } catch (error: any) {
+      console.error(JSON.stringify(error.errors[0].message, null, 2));
       toast.error("Failed to submit the form. Please try again.");
+    }
+  };
+  const handleVerifying = async (data: z.infer<typeof OTPSchema>) => {
+    if (!isLoaded) return;
+    try {
+      const signUpAttempt = await signUp.attemptEmailAddressVerification({
+        code: data.code,
+      });
+      if (signUpAttempt.status === "complete") {
+        await setActive({ session: signUpAttempt.createdSessionId });
+        setSuccess(true);
+        setVerifying(false);
+      } else {
+        console.error(JSON.stringify(signUpAttempt, null, 2));
+      }
+    } catch (err: any) {
+      console.error("Error:", JSON.stringify(err, null, 2));
     } finally {
       setIsSubmitting(false);
     }
   };
-
   return (
     <>
-      {!success ? (
+      {verifying ? (
+        <OTPForm verify={handleVerifying} />
+      ) : !success && !verifying ? (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -564,7 +596,7 @@ const RegisterForm = () => {
             </Button>
           </form>
         </Form>
-      ) : (
+      ) : success ? (
         <div className="w-full flex flex-col justify-center items-center gap-5">
           <p className="font-lg font-semibold text-center">
             Your data has been successfully submitted. You will receive a
@@ -582,7 +614,7 @@ const RegisterForm = () => {
             </Button>
           </div>
         </div>
-      )}
+      ) : null}
     </>
   );
 };

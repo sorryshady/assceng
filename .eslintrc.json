@@ -4,7 +4,8 @@
       "no-unused-vars": "off", // Disable unused variables rule
       "@typescript-eslint/no-unused-vars": "off", // Disable TypeScript-specific unused variables rule
       "react-hooks/exhaustive-deps": "off", // Disable exhaustive-deps rule for React hooks
-      "@typescript-eslint/no-empty-object-type": "off"
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-explicit-any": "off"
     },
     "plugins": ["@typescript-eslint"]
   }
