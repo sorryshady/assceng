@@ -78,7 +78,11 @@ async function main() {
           "DISTRICT",
         ]),
         userRole: "REGULAR",
-        verifiedStatus: faker.datatype.boolean(),
+        verifiedStatus: faker.helpers.arrayElement([
+          "VERIFIED",
+          "PENDING",
+          "REJECTED",
+        ]),
       },
     });
   }

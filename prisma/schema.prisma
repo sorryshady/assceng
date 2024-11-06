@@ -67,9 +67,15 @@ enum CommitteeRole {
     DISTRICT
 }
 
+enum VerifiedStatus {
+    VERIFIED
+    PENDING
+    REJECTED
+}
+
 model User {
     id               String           @id @default(cuid())
-    clerkId          String?           @unique
+    clerkId          String?          @unique
     name             String
     department       Department
     designation      Designation
@@ -89,5 +95,5 @@ model User {
     membershipNumber Int?             @unique
     committeeStatus  CommitteeRole    @default(NONE)
     userRole         UserRole         @default(REGULAR)
-    verifiedStatus   Boolean          @default(false)
+    verifiedStatus   VerifiedStatus   @default(PENDING)
 }
