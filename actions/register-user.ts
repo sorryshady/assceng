@@ -7,6 +7,7 @@ import { z } from 'zod'
 export const registerUser = async (data: z.infer<typeof registerSchema>, photoUrl: string) => {
     const finalData = {
               name: data.name,
+            //   clerkId: clerkId,
               department: data.department,
               designation: data.designation,
               officeAddress: data.officeAddress,

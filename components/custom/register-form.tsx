@@ -42,16 +42,18 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { registerUser } from "@/actions/register-user";
 import { findUserEmail } from "@/actions/find-user-email";
 import { Label } from "../ui/label";
+import { useSignUp } from "@clerk/nextjs";
 const RegisterForm = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { startUpload } = useUploadThing("imageUploader");
   const [success, setSuccess] = useState<boolean>(false);
+  const { isLoaded, signUp, setActive } = useSignUp();
+    const [verifying, setVerifying] = useState<boolean>(false);
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
       department: undefined,
-      //   inService: true,
       designation: undefined,
       officeAddress: "",
       workingDistrict: undefined,
@@ -66,36 +68,38 @@ const RegisterForm = () => {
       dateOfBirth: undefined,
       locality: "",
       photo: undefined,
+      password: "",
+      confirmPassword: "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof registerSchema>) => {
+    if (!isLoaded) return;
     try {
       setIsSubmitting(true);
-
       const user = await findUserEmail(data.email);
-      console.log(user);
       if (user) {
         toast.error("User already exists");
         setIsSubmitting(false);
         return;
       } else {
+
+        let imgUrl = "";
         if (data.photo) {
           const res = await startUpload([data.photo!], {});
           if (res) {
-            await registerUser(data, res[0].url);
+            imgUrl = res[0].url;
           }
-        } else {
-          await registerUser(data, "");
         }
+        await registerUser(data, imgUrl);
         toast.success("Form submitted successfully");
-        setIsSubmitting(false);
         setSuccess(true);
         form.reset();
       }
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -512,6 +516,44 @@ const RegisterForm = () => {
                   </FormItem>
                 )}
               />
+              <div className="flex lg:flex-row flex-col gap-4">
+                <FormField //password
+                  control={form.control}
+                  name="password"
+                  disabled={isSubmitting}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Password *</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your password."
+                          type="password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField //password
+                  control={form.control}
+                  name="confirmPassword"
+                  disabled={isSubmitting}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Confirm Password *</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Confirm your password."
+                          type="password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
             <Button
               className="w-full md:w-fit"
