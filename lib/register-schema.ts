@@ -11,9 +11,6 @@ export const registerSchema = z.object({
     required_error: "Department is required",
     invalid_type_error: "Department must be one of the specified options",
   }),
-  inService: z.boolean({
-    required_error: "In service is required",
-  }),
   designation: z.enum(
     [
       "ASSISTANT_ENGINEER",
@@ -29,7 +26,7 @@ export const registerSchema = z.object({
   ),
   officeAddress: z.string({
     required_error: "Office address is required",
-  }),
+  }).min(5, { message: "Office address must be at least 5 characters long" }),
   workingDistrict: z.enum(
     [
       "TVM", // Thiruvananthapuram
@@ -65,7 +62,7 @@ export const registerSchema = z.object({
   }),
   permanentAddress: z.string({
     required_error: "Permanent address is required",
-  }),
+  }).min(5, { message: "Permanent address must be at least 5 characters long" }),
   homeDistrict: z.enum(
     [
       "TVM", // Thiruvananthapuram

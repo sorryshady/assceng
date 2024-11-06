@@ -10,7 +10,6 @@ async function main() {
       data: {
         name: faker.person.fullName(),
         department: faker.helpers.arrayElement(["LSGD", "PWD", "IRRIGATION"]),
-        inService: faker.datatype.boolean(),
         designation: faker.helpers.arrayElement([
           "ASSISTANT_ENGINEER",
           "ASSISTANT_EXECUTIVE_ENGINEER",

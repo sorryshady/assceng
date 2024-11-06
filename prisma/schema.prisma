@@ -69,10 +69,9 @@ enum CommitteeRole {
 
 model User {
     id               String           @id @default(cuid())
-    clerkId          String?           @unique 
+    clerkId          String?           @unique
     name             String
     department       Department
-    inService        Boolean
     designation      Designation
     officeAddress    String
     workingDistrict  District
