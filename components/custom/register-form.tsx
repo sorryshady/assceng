@@ -123,8 +123,8 @@ const RegisterForm = () => {
       });
       if (signUpAttempt.status === "complete") {
         await setActive({ session: signUpAttempt.createdSessionId });
-        setSuccess(true);
         setVerifying(false);
+        setSuccess(true);
       } else {
         console.error(JSON.stringify(signUpAttempt, null, 2));
       }
