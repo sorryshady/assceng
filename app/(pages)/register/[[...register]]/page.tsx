@@ -1,5 +1,5 @@
 import RegisterForm from "@/components/custom/register-form";
-import SignupForm from "@/components/custom/signup-form";
+import SignupForm from "@/components/custom/clerk-signup-form";
 import Wrapper from "@/components/custom/wrapper";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";

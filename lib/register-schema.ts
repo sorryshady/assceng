@@ -60,7 +60,7 @@ export const registerSchema = z
       })
       .min(1, { message: "Email is required" })
       .email({ message: "Invalid email address" }),
-    gender: z.enum(["MALE", "FEMALE", "TRANSGENDER"], {
+    gender: z.enum(["MALE", "FEMALE", "OTHER"], {
       required_error: "Gender is required",
     }),
     permanentAddress: z

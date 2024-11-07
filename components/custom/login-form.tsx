@@ -19,6 +19,7 @@ import { FormSuccess } from "./form-success";
 import { FormError } from "./form-error";
 import { findUserEmail } from "@/actions/find-user-email";
 import ClerkSigninForm from "./clerk-signin-form";
+import ClerkSignupForm from "./clerk-signup-form";
 
 const LoginForm = () => {
   const [error, setError] = useState("");
@@ -58,7 +59,7 @@ const LoginForm = () => {
   };
   return (
     <CardWrapper
-      headerLabel="Login"
+      headerLabel={step === 0 ? "Login" : step === 1 ? "Sign in" : "Sign up"}
       backButtonLabel="Don't have an account?"
       backButtonHref="/register"
     >
@@ -91,7 +92,7 @@ const LoginForm = () => {
         </Form>
       )}
       {step === 1 && <ClerkSigninForm email={email} />}
-      {step === 2 && <div>Sign up flow</div>}
+      {step === 2 && <ClerkSignupForm email={email} />}
     </CardWrapper>
   );
 };

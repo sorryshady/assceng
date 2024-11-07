@@ -94,7 +94,7 @@ const ClerkSigninForm = ({ email }: ClerkSigninFormProps) => {
           <FormSuccess message={success} />
           <FormError message={error} />
           <Button className="w-full" type="submit" disabled={submitting}>
-            Submit
+            Login
           </Button>
         </form>
       </Form>
