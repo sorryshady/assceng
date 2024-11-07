@@ -26,6 +26,7 @@ import { toast } from "sonner";
 const LoginForm = () => {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [showPassword, setShowPassword] = useState(false);
+  const [clerkReg, setClerkReg] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -40,33 +41,79 @@ const LoginForm = () => {
   });
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     if (!isLoaded) return;
+    console.log("calling onSubmit");
     setError("");
     setSuccess("");
     setSubmitting(true);
-    try {
-      const signInAttempt = await signIn.create({
-        identifier: values.email,
-        password: values.password,
-      });
-      if (signInAttempt.status === "complete") {
-        form.reset();
-        setSuccess("Login successful. Redirecting...");
-        const user = await findUserEmail(values.email);
-        toast.message("Account Incomplete");
-        await setActive({ session: signInAttempt.createdSessionId });
-        if (!user) {
-          router.push("/complete-account");
+    const user = await findUserEmail(values.email);
+    if (user) {
+      if (user.verifiedStatus === "PENDING") {
+        setError("Account has not yet been verified. Cannot login.");
+      } else if (user.verifiedStatus === "VERIFIED") {
+        if (user.clerkId) {
+          setClerkReg(true);
+          try {
+            const signInAttempt = await signIn.create({
+              identifier: values.email,
+              password: values.password,
+            });
+            if (signInAttempt.status === "complete") {
+              form.reset();
+              setSuccess("Login successful. Redirecting...");
+              const user = await findUserEmail(values.email);
+              toast.message("Account Incomplete");
+              await setActive({ session: signInAttempt.createdSessionId });
+              if (!user) {
+                router.push("/complete-account");
+              }
+            } else {
+              setError("Incorrect email or password");
+              console.error(JSON.stringify(signInAttempt, null, 2));
+            }
+          } catch (err: any) {
+            setError(err.errors[0].message);
+            console.error(JSON.stringify(err.errors[0].message, null, 2));
+          } finally {
+            setSubmitting(false);
+          }
+        } else {
+          setError("User not clerk registered.");
         }
-      } else {
-        setError("Incorrect email or password");
-        console.error(JSON.stringify(signInAttempt, null, 2));
+      } else if (user.verifiedStatus === "REJECTED") {
+        setError("Your application has been rejected. Cannot login.");
       }
-    } catch (err: any) {
-      setError(err.errors[0].message);
-      console.error(JSON.stringify(err.errors[0].message, null, 2));
-    } finally {
-      setSubmitting(false);
+      //   form.reset();
     }
+    toast(
+      <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+        <code className="text-white">{JSON.stringify(user, null, 2)}</code>
+      </pre>,
+    );
+    setSubmitting(false);
+    // try {
+    //   const signInAttempt = await signIn.create({
+    //     identifier: values.email,
+    //     password: values.password,
+    //   });
+    //   if (signInAttempt.status === "complete") {
+    //     form.reset();
+    //     setSuccess("Login successful. Redirecting...");
+    //     const user = await findUserEmail(values.email);
+    //     toast.message("Account Incomplete");
+    //     await setActive({ session: signInAttempt.createdSessionId });
+    //     if (!user) {
+    //       router.push("/complete-account");
+    //     }
+    //   } else {
+    //     setError("Incorrect email or password");
+    //     console.error(JSON.stringify(signInAttempt, null, 2));
+    //   }
+    // } catch (err: any) {
+    //   setError(err.errors[0].message);
+    //   console.error(JSON.stringify(err.errors[0].message, null, 2));
+    // } finally {
+    //   setSubmitting(false);
+    // }
   };
   return (
     <CardWrapper
@@ -93,28 +140,30 @@ const LoginForm = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            disabled={submitting}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="password"
-                    type={showPassword ? "text" : "password"}
-                    {...field}
+          {clerkReg && (
+            <FormField
+              control={form.control}
+              disabled={submitting}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="password"
+                      type={showPassword ? "text" : "password"}
+                      {...field}
+                    />
+                  </FormControl>
+                  <ShowPassword
+                    showPassword={showPassword}
+                    setShowPassword={setShowPassword}
                   />
-                </FormControl>
-                <ShowPassword
-                  showPassword={showPassword}
-                  setShowPassword={setShowPassword}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
           <FormSuccess message={success} />
           <FormError message={error} />
           <Button className="w-full" type="submit" disabled={submitting}>
