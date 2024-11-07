@@ -1,11 +1,8 @@
 "use client";
-
 import * as React from "react";
-import { menuItems } from "@/lib/navbar-data";
-import { MenuIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-
+import Image from "next/image";
+import { MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -22,10 +19,14 @@ import {
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { menuItems } from "@/lib/navbar-data";
+import { useAuth } from "@clerk/nextjs"; // Clerk's useAuth hook for auth status
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const MobileNavbar = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const { isSignedIn } = useAuth();
   const pathName = usePathname();
+  const [isOpen, setIsOpen] = React.useState(false);
   const handleLinkClick = () => {
     setIsOpen(false); // Close the sheet
   };
@@ -36,6 +37,7 @@ const MobileNavbar = () => {
         <Link href="/">
           <Image src="/assceng_logo.png" alt="logo" width={250} height={250} />
         </Link>
+
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button size="icon" variant="outline">
@@ -43,6 +45,7 @@ const MobileNavbar = () => {
               <span className="sr-only">Toggle menu</span>
             </Button>
           </SheetTrigger>
+
           <SheetContent
             side="right"
             className="w-[300px] sm:w-[400px] pt-10 bg-white text-black overflow-auto"
@@ -52,14 +55,53 @@ const MobileNavbar = () => {
             </SheetHeader>
             <ul className="flex flex-col gap-4 mt-6">
               {menuItems.map((item) =>
-                item.subItems ? (
+                item.label === "Account" ? (
+                  isSignedIn ? (
+                    <li key="user" className="py-2">
+                      <Link href="/account" onClick={handleLinkClick}>
+                        <Avatar>
+                          <AvatarImage src="https://github.com/shadcn.png" />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                      </Link>
+                    </li>
+                  ) : (
+                    <Accordion
+                      key={item.label}
+                      type="single"
+                      collapsible
+                      className="w-full"
+                    >
+                      <AccordionItem value="item-1" className="border-none">
+                        <AccordionTrigger className="hover:no-underline py-2 text-base font-medium data-[state=open]:text-primary">
+                          {item.label}
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <ul className="flex flex-col gap-4 pl-4 pt-2">
+                            {item.subItems?.map((subItm) => (
+                              <li key={subItm.label}>
+                                <Link
+                                  href={subItm.href}
+                                  onClick={handleLinkClick}
+                                  className="text-base"
+                                >
+                                  {subItm.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  )
+                ) : item.subItems ? (
                   <Accordion
                     key={item.label}
                     type="single"
                     collapsible
                     className="w-full"
                   >
-                    <AccordionItem value="item-1" className="border-none">
+                    <AccordionItem value="item-2" className="border-none">
                       <AccordionTrigger className="hover:no-underline py-2 text-base font-medium data-[state=open]:text-primary">
                         {item.label}
                       </AccordionTrigger>
@@ -89,10 +131,11 @@ const MobileNavbar = () => {
                   <li key={item.label} className="py-2">
                     <Link
                       href={item.href}
-                      className={`text-base font-medium ${
-                        pathName === item.href ? "text-primary" : ""
-                      }`}
                       onClick={handleLinkClick}
+                      className={cn(
+                        "text-base font-medium",
+                        pathName === item.href ? "text-primary" : "",
+                      )}
                     >
                       {item.label}
                     </Link>

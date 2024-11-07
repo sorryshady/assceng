@@ -6,19 +6,50 @@ import { HoveredLink, Menu, MenuItem } from "../ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { menuItems } from "@/lib/navbar-data";
+import { useAuth, UserButton } from "@clerk/nextjs"; // Import Clerk's useAuth hook
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import SignOut from "./sign-out";
 
 const Navbar = () => {
+  const { isSignedIn } = useAuth();
   const pathname = usePathname();
   const [active, setActive] = React.useState<string | null>(null);
+
   return (
     <nav className="w-full border shadow-md fixed top-0 left-0 right-0 z-[20] bg-white">
-      <div className="max-w-7xl mx-auto hidden justify-between items-center p-5  lg:flex">
+      <div className="max-w-7xl mx-auto hidden justify-between items-center p-5 lg:flex">
         <Link href="/">
           <Image src="/assceng_logo.png" alt="logo" width={300} height={300} />
         </Link>
         <Menu setActive={setActive}>
           {menuItems.map((item) =>
-            item.subItems ? (
+            item.label === "Account" ? (
+              isSignedIn ? (
+                // <UserButton key={"user"} />
+                <SignOut key={"user"} />
+              ) : (
+                // <Link key="user" href={"/account"}>
+                //   <Avatar>
+                //     <AvatarImage src="https://github.com/shadcn.png" />
+                //     <AvatarFallback>CN</AvatarFallback>
+                //   </Avatar>
+                // </Link>
+                <MenuItem
+                  key={item.label}
+                  setActive={setActive}
+                  active={active}
+                  item={item.label}
+                >
+                  <div className="flex flex-col space-y-4 text-sm">
+                    {item.subItems?.map((subItm) => (
+                      <HoveredLink key={subItm.label} href={subItm.href}>
+                        {subItm.label}
+                      </HoveredLink>
+                    ))}
+                  </div>
+                </MenuItem>
+              )
+            ) : item.subItems ? (
               <MenuItem
                 key={item.label}
                 setActive={setActive}

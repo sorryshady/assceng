@@ -53,7 +53,7 @@ enum EmploymentStatus {
 enum Gender {
     MALE
     FEMALE
-    TRANSGENDER
+    OTHER
 }
 
 enum UserRole {
@@ -67,11 +67,17 @@ enum CommitteeRole {
     DISTRICT
 }
 
+enum VerifiedStatus {
+    VERIFIED
+    PENDING
+    REJECTED
+}
+
 model User {
-    id               Int              @id @default(autoincrement())
+    id               String           @id @default(cuid())
+    clerkId          String?          @unique
     name             String
     department       Department
-    inService        Boolean
     designation      Designation
     officeAddress    String
     workingDistrict  District
@@ -89,5 +95,5 @@ model User {
     membershipNumber Int?             @unique
     committeeStatus  CommitteeRole    @default(NONE)
     userRole         UserRole         @default(REGULAR)
-    verifiedStatus   Boolean          @default(false)
+    verifiedStatus   VerifiedStatus   @default(PENDING)
 }
