@@ -22,6 +22,7 @@ import OTPForm from "./otp-form";
 import ShowPassword from "./show-password";
 import { OTPSchema } from "@/lib/otp-schema";
 import { ClerkSignupSchema } from "@/lib/login-schema";
+import { registerClerkId } from "@/actions/register-clerId";
 
 interface ClerkSignupFormProps {
   email: string;
@@ -74,6 +75,7 @@ const ClerkSignupForm = ({ email }: ClerkSignupFormProps) => {
       if (signUpAttempt.status === "complete") {
         setSuccess("Email verified successfully. Redirecting...");
         await setActive({ session: signUpAttempt.createdSessionId });
+        await registerClerkId(email);
         setVerifying(false);
       } else {
         setError("Verification failed. Please check the code.");
