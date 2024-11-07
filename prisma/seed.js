@@ -1,14 +1,30 @@
-// prisma/seed.js
 import { PrismaClient } from "@prisma/client";
 import { faker } from "@faker-js/faker";
+import { createClerkClient } from "@clerk/backend";
+import fs from "fs";
+import { min } from "date-fns";
 
 const prisma = new PrismaClient();
+const clerkClient = createClerkClient({
+  secretKey: process.env.CLERK_SECRET_KEY,
+});
 
+const testUsers = [];
 async function main() {
   for (let i = 0; i < 20; i++) {
+    const email = faker.internet.email();
+    const password = faker.internet.password(); // Adjust minimum length as needed
+    const clerkUser = await clerkClient.users.createUser({
+      emailAddress: [email],
+      password: password,
+    });
+
+    testUsers.push({ email, password });
+
     await prisma.user.create({
       data: {
         name: faker.person.fullName(),
+        clerkId: clerkUser.id,
         department: faker.helpers.arrayElement(["LSGD", "PWD", "IRRIGATION"]),
         designation: faker.helpers.arrayElement([
           "ASSISTANT_ENGINEER",
@@ -39,8 +55,8 @@ async function main() {
           "RETIRED",
           "EXPIRED",
         ]),
-        email: faker.internet.email(),
-        gender: faker.helpers.arrayElement(["MALE", "FEMALE", "TRANSGENDER"]),
+        email: email,
+        gender: faker.helpers.arrayElement(["MALE", "FEMALE", "OTHER"]),
         permanentAddress: faker.location.streetAddress(),
         homeDistrict: faker.helpers.arrayElement([
           "TVM",
@@ -69,7 +85,11 @@ async function main() {
           "AB+",
           "AB-",
         ]),
-        dateOfBirth: faker.date.birthdate({ min: 20, max: 60, mode: "age" }),
+        dateOfBirth: faker.date.birthdate({
+          min: 20,
+          max: 60,
+          mode: "age",
+        }),
         locality: faker.location.city(),
         photoUrl: faker.image.avatar(),
         committeeStatus: faker.helpers.arrayElement([
@@ -86,6 +106,8 @@ async function main() {
       },
     });
   }
+
+  fs.writeFileSync("testUsers.json", JSON.stringify(testUsers, null, 2));
 }
 
 main()
