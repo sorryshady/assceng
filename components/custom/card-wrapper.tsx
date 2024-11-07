@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import BackButton from "./back-button";
 import Header from "./header";
@@ -9,6 +10,7 @@ interface CardWrapperProps {
   headerLabel: string;
   backButtonLabel: string;
   backButtonHref: string;
+  className?: string;
 }
 
 export const CardWrapper = ({
@@ -16,9 +18,10 @@ export const CardWrapper = ({
   headerLabel,
   backButtonLabel,
   backButtonHref,
+  className,
 }: CardWrapperProps) => {
   return (
-    <Card className="w-[400px] shadow-md mx-auto">
+    <Card className={cn("w-[400px] shadow-md mx-auto", className)}>
       <CardHeader>
         <Header label={headerLabel} />
       </CardHeader>

@@ -1,4 +1,4 @@
-
+import RegisterForm from "@/components/custom/register-form";
 import SignupForm from "@/components/custom/signup-form";
 import Wrapper from "@/components/custom/wrapper";
 import { auth } from "@clerk/nextjs/server";
@@ -11,10 +11,8 @@ export default async function Register() {
   }
   return (
     <Wrapper>
-      {/* <RegisterForm /> */}
-      <div className="mx-auto">
-        <SignupForm />
-      </div>
+      <RegisterForm />
+      <div className="mx-auto">{/* <SignupForm /> */}</div>
     </Wrapper>
   );
 }
