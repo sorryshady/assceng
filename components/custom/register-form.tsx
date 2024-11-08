@@ -104,7 +104,6 @@ const RegisterForm = () => {
         headerLabel="Register"
         backButtonHref="/login"
         backButtonLabel="Have an account? Login"
-        className="w-[600px]"
       >
         {!success ? (
           <Form {...form}>
