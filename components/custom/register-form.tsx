@@ -64,7 +64,7 @@ const RegisterForm = () => {
       phoneNumber: "",
       mobileNumber: "",
       bloodGroup: undefined,
-      dateOfBirth: undefined,
+      dateOfBirth: "",
       locality: "",
       photo: undefined,
     },
@@ -104,7 +104,6 @@ const RegisterForm = () => {
         headerLabel="Register"
         backButtonHref="/login"
         backButtonLabel="Have an account? Login"
-        className="w-[600px]"
       >
         {!success ? (
           <Form {...form}>
@@ -138,7 +137,8 @@ const RegisterForm = () => {
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Date of birth *</FormLabel>
-                      <Popover>
+                      <Input placeholder="dd/mm/yyyy" type="text" {...field} />
+                      {/* <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
@@ -171,7 +171,7 @@ const RegisterForm = () => {
                             initialFocus
                           />
                         </PopoverContent>
-                      </Popover>
+                      </Popover> */}
                       <FormMessage />
                     </FormItem>
                   )}

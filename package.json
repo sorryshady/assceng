@@ -74,6 +74,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@clerk/backend": "^1.15.7",
     "@faker-js/faker": "^9.2.0",
     "@sanity/types": "^3.62.2",
     "@types/node": "^20",
