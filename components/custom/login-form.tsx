@@ -35,28 +35,41 @@ const LoginForm = () => {
     },
   });
   const onSubmit = async (values: z.infer<typeof EmailSchema>) => {
-    setError("");
-    setSuccess("");
-    setSubmitting(true);
-    const user = await findUserEmail(values.email);
-    if (user) {
-      setEmail(values.email);
-      if (user.verifiedStatus === "PENDING") {
-        setError("Account has not yet been verified. Cannot login.");
-      } else if (user.verifiedStatus === "VERIFIED") {
-        if (user.clerkId) {
-          setStep(1);
-        } else {
-          setStep(2);
+    try {
+      setError("");
+      setSuccess("");
+      setSubmitting(true);
+
+      // Perform async action
+      const user = await findUserEmail(values.email);
+
+      // Define local variables to control state updates later
+      let newStep = 0;
+      let newError = "";
+
+      if (user) {
+        setEmail(values.email);
+        if (user.verifiedStatus === "PENDING") {
+          newError = "Account has not yet been verified. Cannot login.";
+        } else if (user.verifiedStatus === "VERIFIED") {
+          newStep = user.clerkId ? 1 : 2;
+        } else if (user.verifiedStatus === "REJECTED") {
+          newError = "Your application has been rejected. Cannot login.";
         }
-      } else if (user.verifiedStatus === "REJECTED") {
-        setError("Your application has been rejected. Cannot login.");
+      } else {
+        newError = "Email does not exist in database.";
       }
-    } else {
-      setError("Email does not exist in database.");
+
+      // Set the state after all calculations
+      setStep(newStep);
+      setError(newError);
+    } catch (err) {
+      setError("An unexpected error occurred.");
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
+
   return (
     <CardWrapper
       headerLabel={step === 0 ? "Login" : step === 1 ? "Sign in" : "Sign up"}
