@@ -151,3 +151,7 @@ const MobileNavbar = () => {
 };
 
 export default MobileNavbar;
+
+const LoggedInUser = () => {
+  return <div>Logged In</div>;
+};

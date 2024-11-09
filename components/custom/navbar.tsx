@@ -182,7 +182,7 @@ const AccountLinks = ({
             <Link
               className={cn(
                 "text-nowrap hover:text-primary text-[15px]",
-                currentPath === "/my-account" && "text-primary",
+                currentPath === "/account" && "text-primary",
               )}
               href={"/my-account"}
             >
