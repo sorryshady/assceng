@@ -18,6 +18,7 @@ import { FormError } from "./form-error";
 import { Button } from "../ui/button";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 interface ClerkSigninFormProps {
   email: string;
