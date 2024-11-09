@@ -7,9 +7,12 @@ const SignOut = () => {
   const { signOut } = useClerk();
 
   return (
-    <Button variant={"link"} onClick={() => signOut({ redirectUrl: "/" })}>
+    <p
+      className="text-start text-sm hover:text-primary"
+      onClick={() => signOut({ redirectUrl: "/" })}
+    >
       Sign Out
-    </Button>
+    </p>
   );
 };
 export default SignOut;
