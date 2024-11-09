@@ -39,11 +39,7 @@ const LoginForm = () => {
       setError("");
       setSuccess("");
       setSubmitting(true);
-
-      // Perform async action
       const user = await findUserEmail(values.email);
-
-      // Define local variables to control state updates later
       let newStep = 0;
       let newError = "";
 

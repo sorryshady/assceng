@@ -11,7 +11,7 @@ export default function Home() {
         <section className="w-full">
           <Hero />
         </section>
-        <section className="container mx-auto py-12 px-4">
+        <section className="container max-w-7xl mx-auto py-12 px-4">
           <Card className="bg-white shadow-lg">
             <CardHeader className="space-y-4">
               <CardTitle className="text-4xl font-bold text-center text-primary">
@@ -69,7 +69,7 @@ export default function Home() {
             </CardContent>
           </Card>
         </section>
-        <section className="container mx-auto pb-12 px-4">
+        <section className="container max-w-7xl mx-auto pb-12 px-4">
           <h2 className="text-3xl font-bold text-center text-primary mb-8">
             Featured Videos
           </h2>
