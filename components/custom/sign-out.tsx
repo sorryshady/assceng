@@ -1,15 +1,20 @@
 "use client";
 
 import { useClerk } from "@clerk/nextjs";
-import { Button } from "../ui/button";
 
-const SignOut = () => {
+interface Props {
+  handleClick?: () => void;
+}
+const SignOut = ({ handleClick }: Props) => {
   const { signOut } = useClerk();
-
+  const clickFunctionality = () => {
+    signOut({ redirectUrl: "/" });
+    handleClick?.();
+  };
   return (
     <p
-      className="text-start text-sm hover:text-primary"
-      onClick={() => signOut({ redirectUrl: "/" })}
+      className="text-start text-base hover:text-primary"
+      onClick={clickFunctionality}
     >
       Sign Out
     </p>
