@@ -1,6 +1,6 @@
 import { ClerkSigninSchema } from "@/lib/login-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, use } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -17,11 +17,16 @@ import { FormSuccess } from "./form-success";
 import { FormError } from "./form-error";
 import { Button } from "../ui/button";
 import { useSignIn } from "@clerk/nextjs";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface ClerkSigninFormProps {
   email: string;
 }
 const ClerkSigninForm = ({ email }: ClerkSigninFormProps) => {
+  const params = useSearchParams();
+  const redirectUrl = params?.get("redirect_url") || "/";
+  const router = useRouter();
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -50,6 +55,7 @@ const ClerkSigninForm = ({ email }: ClerkSigninFormProps) => {
         form.reset();
         setSuccess("Login successful. Redirecting...");
         await setActive({ session: signInAttempt.createdSessionId });
+        router.push(redirectUrl);
       }
     } catch (err: any) {
       setError(err.errors[0].message);

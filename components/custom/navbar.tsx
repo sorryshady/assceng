@@ -31,7 +31,6 @@ const Navbar = () => {
     }
   };
   useEffect(() => {
-    console.log(isSignedIn);
     if (isSignedIn && userId) {
       fetchUser();
     } else {

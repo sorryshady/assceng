@@ -55,8 +55,6 @@ const LoginForm = () => {
       } else {
         newError = "Email does not exist in database.";
       }
-
-      // Set the state after all calculations
       setStep(newStep);
       setError(newError);
     } catch (err) {
