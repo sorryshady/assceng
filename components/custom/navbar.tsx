@@ -97,7 +97,7 @@ const SubItems = ({
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 cursor-pointer">
         <span>
           {(subItem.label === "Account" && userName) || subItem.label}
         </span>
