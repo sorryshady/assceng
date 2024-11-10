@@ -7,6 +7,7 @@ import {
   committeeStatus,
   department,
   designation,
+  employmentStatus,
   gender,
   userRole,
   workingDistrict,
@@ -65,6 +66,13 @@ export function DataTableToolbar<TData>({
               column={table.getColumn("department")}
               title="Department"
               options={department}
+            />
+          )}
+          {table.getColumn("employmentStatus") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("employmentStatus")}
+              title="Status"
+              options={employmentStatus}
             />
           )}
           {table.getColumn("committeeStatus") && (

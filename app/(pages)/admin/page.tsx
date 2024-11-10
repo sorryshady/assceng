@@ -3,8 +3,6 @@ import Wrapper from "@/components/custom/wrapper";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { fetchVerifiedUsers } from "@/actions/fetch-users";
-import { DataTable } from "@/components/admin-table/components/data-table";
-import { columns } from "@/components/admin-table/components/columns";
 import AdminTableClient from "@/components/admin-table/components/admin-table-client";
 
 export default async function Admin() {

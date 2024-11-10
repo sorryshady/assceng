@@ -46,30 +46,30 @@ import {
 export const columns = (
   handleDeleteUser: (email: string) => Promise<void>,
 ): ColumnDef<UserTableSchema>[] => [
-  //   {
-  //     id: "select",
-  //     header: ({ table }) => (
-  //       <Checkbox
-  //         checked={
-  //           table.getIsAllPageRowsSelected() ||
-  //           (table.getIsSomePageRowsSelected() && "indeterminate")
-  //         }
-  //         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //         aria-label="Select all"
-  //         className="translate-y-[2px]"
-  //       />
-  //     ),
-  //     cell: ({ row }) => (
-  //       <Checkbox
-  //         checked={row.getIsSelected()}
-  //         onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //         aria-label="Select row"
-  //         className="translate-y-[2px]"
-  //       />
-  //     ),
-  //     enableSorting: false,
-  //     enableHiding: false,
-  //   },
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -78,7 +78,7 @@ export const columns = (
     cell: ({ row }) => (
       <div className="w-32 truncate">{row.getValue("name")}</div>
     ),
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
   },
   {
@@ -148,6 +148,9 @@ export const columns = (
         {getDistrictFullName(row.getValue("workingDistrict"))}
       </div>
     ),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -165,6 +168,10 @@ export const columns = (
       }
       return <div className="">{userGender.label}</div>;
     },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+
     enableSorting: false,
     enableHiding: false,
   },
@@ -182,6 +189,9 @@ export const columns = (
       }
       return <div className="w-32 truncate">{userDesignation.label}</div>;
     },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -198,6 +208,9 @@ export const columns = (
         return null;
       }
       return <div className="">{userDepartment.label}</div>;
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
     },
     enableSorting: false,
     enableHiding: false,
@@ -241,6 +254,9 @@ export const columns = (
           </SelectContent>
         </Select>
       );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
     },
     enableSorting: false,
     enableHiding: false,
@@ -315,14 +331,6 @@ export const columns = (
                 onClick={async () =>
                   await handleDeleteUser(row.getValue("email"))
                 }
-                // onClick={async () => {
-                //   const reponse = await deleteUser(row.getValue("email"));
-                //   if (reponse.error) {
-                //     toast.error(reponse.error);
-                //   } else {
-                //     toast.success(reponse.success);
-                //   }
-                // }}
               >
                 Delete
               </AlertDialogAction>
