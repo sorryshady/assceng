@@ -39,11 +39,7 @@ const LoginForm = () => {
       setError("");
       setSuccess("");
       setSubmitting(true);
-
-      // Perform async action
       const user = await findUserEmail(values.email);
-
-      // Define local variables to control state updates later
       let newStep = 0;
       let newError = "";
 
@@ -59,8 +55,6 @@ const LoginForm = () => {
       } else {
         newError = "Email does not exist in database.";
       }
-
-      // Set the state after all calculations
       setStep(newStep);
       setError(newError);
     } catch (err) {

@@ -17,18 +17,43 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import { menuItems } from "@/lib/navbar-data";
+import { MenuItem, menuItems } from "@/lib/navbar-data";
 import { useAuth } from "@clerk/nextjs"; // Clerk's useAuth hook for auth status
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { verifyClerkUser } from "@/actions/verify-clerk-user";
+import SignOut from "./sign-out";
 
 const MobileNavbar = () => {
-  const { isSignedIn } = useAuth();
-  const pathName = usePathname();
-  const [isOpen, setIsOpen] = React.useState(false);
+  const { userId, isSignedIn } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const [user, setUser] = useState<{ name: string; admin: boolean }>({
+    name: "",
+    admin: false,
+  });
+
+  const fetchUser = async () => {
+    if (userId) {
+      const user = await verifyClerkUser(userId);
+      setUser({
+        name: user.name || "",
+        admin: user.userRole === "ADMIN",
+      });
+    }
+  };
+  useEffect(() => {
+    if (isSignedIn && userId) {
+      fetchUser();
+    } else {
+      setUser({ name: "", admin: false });
+    }
+  }, [isSignedIn, userId]);
+
   const handleLinkClick = () => {
-    setIsOpen(false); // Close the sheet
+    setIsOpen(false);
   };
 
   return (
@@ -54,46 +79,35 @@ const MobileNavbar = () => {
               <SheetTitle className="text-left">Menu</SheetTitle>
             </SheetHeader>
             <ul className="flex flex-col gap-4 mt-6">
-              {menuItems.map((item) =>
-                item.label === "Account" ? (
-                  isSignedIn ? (
-                    <li key="user" className="py-2">
-                      <Link href="/account" onClick={handleLinkClick}>
-                        <Avatar>
-                          <AvatarImage src="https://github.com/shadcn.png" />
-                          <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
+              {menuItems.map((item) => (
+                <div key={item.label}>
+                  {item.subItems ? (
+                    <SubItem
+                      subItem={item}
+                      currentPath={pathname}
+                      userName={user.name}
+                      adminStatus={user.admin}
+                      handleLinkClick={handleLinkClick}
+                    />
+                  ) : (
+                    <li key={item.label} className="py-2">
+                      <Link
+                        href={item.href}
+                        onClick={handleLinkClick}
+                        className={cn(
+                          "text-base font-medium",
+                          pathname === item.href ? "text-primary" : "",
+                        )}
+                      >
+                        {item.label}
                       </Link>
                     </li>
-                  ) : (
-                    <Accordion
-                      key={item.label}
-                      type="single"
-                      collapsible
-                      className="w-full"
-                    >
-                      <AccordionItem value="item-1" className="border-none">
-                        <AccordionTrigger className="hover:no-underline py-2 text-base font-medium data-[state=open]:text-primary">
-                          {item.label}
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <ul className="flex flex-col gap-4 pl-4 pt-2">
-                            {item.subItems?.map((subItm) => (
-                              <li key={subItm.label}>
-                                <Link
-                                  href={subItm.href}
-                                  onClick={handleLinkClick}
-                                  className="text-base"
-                                >
-                                  {subItm.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  )
+                  )}
+                </div>
+              ))}
+              {/* {menuItems.map((item) =>
+                item.label === "Account" ? (
+                  isSignedIn && <div>Signed In</div>
                 ) : item.subItems ? (
                   <Accordion
                     key={item.label}
@@ -141,7 +155,7 @@ const MobileNavbar = () => {
                     </Link>
                   </li>
                 ),
-              )}
+              )} */}
             </ul>
           </SheetContent>
         </Sheet>
@@ -151,3 +165,139 @@ const MobileNavbar = () => {
 };
 
 export default MobileNavbar;
+
+interface SubItemProps {
+  subItem: MenuItem;
+  currentPath: string;
+  userName: string;
+  adminStatus: boolean;
+  handleLinkClick: () => void;
+}
+const SubItem = ({
+  subItem,
+  currentPath,
+  userName,
+  adminStatus,
+  handleLinkClick,
+}: SubItemProps) => {
+  return (
+    <Accordion key={subItem.label} type="single" collapsible className="w-full">
+      <AccordionItem value="item-2" className="border-none">
+        <AccordionTrigger className="hover:no-underline py-2 text-base font-medium data-[state=open]:text-primary">
+          {(subItem.label === "Account" && userName) || subItem.label}
+        </AccordionTrigger>
+        <AccordionContent>
+          <ul className="flex flex-col gap-4 pl-4 pt-2">
+            {subItem.label === "Account" ? (
+              <AccountLinks
+                userName={userName}
+                adminStatus={adminStatus}
+                currentPath={currentPath}
+                handleLinkClicks={handleLinkClick}
+              />
+            ) : (
+              subItem.subItems?.map((subItm) => (
+                <li key={subItm.label}>
+                  <Link
+                    href={subItm.href}
+                    onClick={handleLinkClick}
+                    className={cn(
+                      "text-base",
+                      currentPath === subItm.href ? "text-primary" : "",
+                    )}
+                  >
+                    {subItm.label}
+                  </Link>
+                </li>
+              ))
+            )}
+          </ul>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
+};
+
+interface AccountLinksProps {
+  userName: string;
+  adminStatus: boolean;
+  currentPath: string;
+  handleLinkClicks: () => void;
+}
+
+const AccountLinks = ({
+  userName,
+  adminStatus,
+  currentPath,
+  handleLinkClicks,
+}: AccountLinksProps) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(!!userName);
+  }, [userName]);
+  console.log(isLoggedIn);
+
+  return (
+    <>
+      {!isLoggedIn ? (
+        <>
+          <li>
+            <Link
+              className={cn(
+                "text-nowrap hover:text-primary text-base",
+                currentPath === "/login" && "text-primary ",
+              )}
+              onClick={handleLinkClicks}
+              href={"/login"}
+            >
+              Login
+            </Link>
+          </li>
+          <li>
+            <Link
+              className={cn(
+                "text-nowrap hover:text-primary text-base",
+                currentPath === "/register" && "text-primary ",
+              )}
+              onClick={handleLinkClicks}
+              href={"/register"}
+            >
+              Register
+            </Link>
+          </li>
+        </>
+      ) : (
+        <>
+          <li>
+            <Link
+              className={cn(
+                "text-nowrap hover:text-primary text-base ",
+                currentPath === "/account" && "text-primary ",
+              )}
+              onClick={handleLinkClicks}
+              href={"/my-account"}
+            >
+              My Account
+            </Link>
+          </li>
+          <li>
+            {adminStatus && (
+              <Link
+                className={cn(
+                  "text-nowrap hover:text-primary text-base",
+                  currentPath === "/admin" && "text-primary ",
+                )}
+                onClick={handleLinkClicks}
+                href={"/admin"}
+              >
+                Admin Panel
+              </Link>
+            )}
+          </li>
+        </>
+      )}
+      {isLoggedIn && <SignOut handleClick={handleLinkClicks}/>}
+    </>
+  );
+};
