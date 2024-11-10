@@ -3,6 +3,7 @@
 import {
   ColumnDef,
   ColumnFiltersState,
+  FilterFn,
   SortingState,
   VisibilityState,
   flexRender,
@@ -23,6 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
+import { DataTableToolbar } from "./data-table-toolbar";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,6 +39,18 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+    const searchValue = value as string;
+    const name = row.getValue("name") as string;
+    const email = row.getValue("email") as string;
+
+    return (
+      name.toLowerCase().includes(searchValue.toLowerCase()) ||
+      email.toLowerCase().includes(searchValue.toLowerCase())
+    );
+  };
 
   const table = useReactTable({
     data,
@@ -46,7 +60,9 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
+      globalFilter: searchQuery,
     },
+    onGlobalFilterChange: setSearchQuery,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -58,11 +74,14 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    filterFns: {
+      fuzzy: fuzzyFilter,
+    },
   });
 
   return (
     <div className="space-y-4">
-      {/* <DataTableToolbar table={table} /> */}
+      <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

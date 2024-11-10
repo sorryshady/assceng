@@ -15,6 +15,7 @@ import { userRole } from "../data/data";
 import { DataTableColumnHeader } from "./data-table-column";
 import { changeUserRole } from "@/actions/admin-actions";
 import { UserRole } from "@prisma/client";
+import { getDistrictFullName } from "@/lib/district-mapping";
 
 export const columns: ColumnDef<UserTableSchema>[] = [
   {
@@ -97,5 +98,18 @@ export const columns: ColumnDef<UserTableSchema>[] = [
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
+  },
+  {
+    accessorKey: "workingDistrict",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Working District" />
+    ),
+    cell: ({ row }) => (
+      <div className="">
+        {getDistrictFullName(row.getValue("workingDistrict"))}
+      </div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
   },
 ];

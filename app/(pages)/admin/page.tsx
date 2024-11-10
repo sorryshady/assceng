@@ -14,7 +14,6 @@ export default async function Admin() {
     redirect("/");
   }
   const users = await fetchVerifiedUsers();
-  console.log(users);
   return (
     <Wrapper>
       <div className="h-full flex flex-1 flex-col space-y-8 p-8">
