@@ -276,7 +276,7 @@ const AccountLinks = ({
                 currentPath === "/account" && "text-primary ",
               )}
               onClick={handleLinkClicks}
-              href={"/my-account"}
+              href={"/account"}
             >
               My Account
             </Link>
