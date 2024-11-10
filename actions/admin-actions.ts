@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from '@/db'
-import { UserRole } from '@prisma/client'
+import { CommitteeRole, UserRole } from '@prisma/client'
 
 interface Props {
     email:string,
@@ -9,9 +9,18 @@ interface Props {
 }
 
 export async function changeUserRole({email, role}: Props) {
-    console.log(email, role);
     await db.user.update({
         where: { email: email },
         data: { userRole: role },
     });
+}
+interface CommitteProps {
+    email: string,
+    committee: CommitteeRole
+}
+export async function changeUserCommittee({email, committee}: CommitteProps) {
+    await db.user.update({
+        where: { email: email },
+        data: { committeeStatus: committee },
+    })
 }

@@ -13,7 +13,7 @@ export default async function Admin() {
   if (adminUser.userRole !== "ADMIN") {
     redirect("/");
   }
-  const users = await fetchVerifiedUsers();
+  const users = await fetchVerifiedUsers(userId);
   return (
     <Wrapper>
       <div className="h-full flex flex-1 flex-col space-y-8 p-8">

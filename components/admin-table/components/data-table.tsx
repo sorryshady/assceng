@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { DataTablePagination } from "./data-table-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -83,7 +84,7 @@ export function DataTable<TData, TValue>({
     <div className="space-y-4">
       <DataTableToolbar table={table} />
       <div className="rounded-md border">
-        <Table>
+        <Table className="overflow-x-auto">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -102,7 +103,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="overflow-x-auto">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -132,7 +133,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      {/* <DataTablePagination table={table} /> */}
+      <DataTablePagination table={table} />
     </div>
   );
 }

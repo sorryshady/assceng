@@ -29,7 +29,6 @@ export const userTableSchema = z.object({
   ]),
   employmentStatus: z.enum(["WORKING", "RETIRED", "EXPIRED"]),
   gender: z.enum(["MALE", "FEMALE", "OTHER"]),
-  mobileNumber: z.string(),
   committeeStatus: z.enum(["STATE", "DISTRICT", "NONE"]),
   userRole: z.enum(["REGULAR", "ADMIN"]),
 });
