@@ -43,7 +43,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-export const columns: ColumnDef<UserTableSchema>[] = [
+export const columns = (
+  handleDeleteUser: (email: string) => Promise<void>,
+): ColumnDef<UserTableSchema>[] => [
   //   {
   //     id: "select",
   //     header: ({ table }) => (
@@ -73,7 +75,9 @@ export const columns: ColumnDef<UserTableSchema>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
-    cell: ({ row }) => <div className="w-fit">{row.getValue("name")}</div>,
+    cell: ({ row }) => (
+      <div className="w-32 truncate">{row.getValue("name")}</div>
+    ),
     enableSorting: false,
     enableHiding: false,
   },
@@ -82,7 +86,9 @@ export const columns: ColumnDef<UserTableSchema>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Email" />
     ),
-    cell: ({ row }) => <div className="w-fit">{row.getValue("email")}</div>,
+    cell: ({ row }) => (
+      <div className="w-32 truncate">{row.getValue("email")}</div>
+    ),
     enableSorting: false,
     enableHiding: false,
   },
@@ -138,7 +144,7 @@ export const columns: ColumnDef<UserTableSchema>[] = [
       <DataTableColumnHeader column={column} title="Working District" />
     ),
     cell: ({ row }) => (
-      <div className="">
+      <div className="truncate w-32">
         {getDistrictFullName(row.getValue("workingDistrict"))}
       </div>
     ),
@@ -174,7 +180,7 @@ export const columns: ColumnDef<UserTableSchema>[] = [
       if (!userDesignation) {
         return null;
       }
-      return <div className="">{userDesignation.label}</div>;
+      return <div className="w-32 truncate">{userDesignation.label}</div>;
     },
     enableSorting: false,
     enableHiding: false,
@@ -290,7 +296,7 @@ export const columns: ColumnDef<UserTableSchema>[] = [
     cell: ({ row }) => (
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant={"destructive"} size={"icon"}>
+          <Button variant={"outline"} size={"icon"}>
             <Trash />
           </Button>
         </AlertDialogTrigger>
@@ -306,14 +312,17 @@ export const columns: ColumnDef<UserTableSchema>[] = [
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <Button variant={"destructive"} asChild>
               <AlertDialogAction
-                onClick={async () => {
-                  const reponse = await deleteUser(row.getValue("email"));
-                  if (reponse.error) {
-                    toast.error(reponse.error);
-                  } else {
-                    toast.success(reponse.success);
-                  }
-                }}
+                onClick={async () =>
+                  await handleDeleteUser(row.getValue("email"))
+                }
+                // onClick={async () => {
+                //   const reponse = await deleteUser(row.getValue("email"));
+                //   if (reponse.error) {
+                //     toast.error(reponse.error);
+                //   } else {
+                //     toast.success(reponse.success);
+                //   }
+                // }}
               >
                 Delete
               </AlertDialogAction>

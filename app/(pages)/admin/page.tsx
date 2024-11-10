@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { fetchVerifiedUsers } from "@/actions/fetch-users";
 import { DataTable } from "@/components/admin-table/components/data-table";
 import { columns } from "@/components/admin-table/components/columns";
+import AdminTableClient from "@/components/admin-table/components/admin-table-client";
 
 export default async function Admin() {
   const { userId } = await auth();
@@ -24,7 +25,7 @@ export default async function Admin() {
             </h2>
           </div>
         </div>
-        <DataTable data={users} columns={columns} />
+        <AdminTableClient initialUsers={users} />
       </div>
     </Wrapper>
   );
