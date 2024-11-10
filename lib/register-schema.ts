@@ -139,8 +139,6 @@ export const registerSchema = z.object({
   }, {
     message: "Date of birth cannot be in the future",
   }),
-
-
   locality: z
     .string({
       required_error: "Locality is required",

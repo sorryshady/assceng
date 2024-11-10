@@ -35,7 +35,7 @@ export default function RootLayout({
         <SmoothScrolling />
         <html lang="en">
           <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen`}
+            className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
           >
             <Navbar />
             <MobileNavbar />
