@@ -20,35 +20,54 @@ import {
   userRole,
 } from "../data/data";
 import { DataTableColumnHeader } from "./data-table-column";
-import { changeUserCommittee, changeUserRole } from "@/actions/admin-actions";
-import { CommitteeRole, UserRole } from "@prisma/client";
+import {
+  changeUserCommittee,
+  changeUserEmploymentStatus,
+  changeUserRole,
+  deleteUser,
+} from "@/actions/admin-actions";
+import { CommitteeRole, EmploymentStatus, UserRole } from "@prisma/client";
 import { getDistrictFullName } from "@/lib/district-mapping";
+import { Button } from "@/components/ui/button";
+import { Trash } from "lucide-react";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export const columns: ColumnDef<UserTableSchema>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  //   {
+  //     id: "select",
+  //     header: ({ table }) => (
+  //       <Checkbox
+  //         checked={
+  //           table.getIsAllPageRowsSelected() ||
+  //           (table.getIsSomePageRowsSelected() && "indeterminate")
+  //         }
+  //         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //         aria-label="Select all"
+  //         className="translate-y-[2px]"
+  //       />
+  //     ),
+  //     cell: ({ row }) => (
+  //       <Checkbox
+  //         checked={row.getIsSelected()}
+  //         onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //         aria-label="Select row"
+  //         className="translate-y-[2px]"
+  //       />
+  //     ),
+  //     enableSorting: false,
+  //     enableHiding: false,
+  //   },
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -82,12 +101,17 @@ export const columns: ColumnDef<UserTableSchema>[] = [
       return (
         <Select
           defaultValue={currentRole.value}
-          onValueChange={async (newRole) =>
-            await changeUserRole({
+          onValueChange={async (newRole) => {
+            const response = await changeUserRole({
               email: row.getValue("email"),
               role: newRole as UserRole,
-            })
-          }
+            });
+            if (response.error) {
+              toast.error(response.error);
+            } else {
+              toast.success(response.success);
+            }
+          }}
         >
           <SelectTrigger className="w-full">
             <SelectValue defaultValue={currentRole.value} />
@@ -105,6 +129,8 @@ export const columns: ColumnDef<UserTableSchema>[] = [
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "workingDistrict",
@@ -173,17 +199,42 @@ export const columns: ColumnDef<UserTableSchema>[] = [
   {
     accessorKey: "employmentStatus",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Employment Status" />
+      <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
-      const userEmploymentStatus = employmentStatus.find(
-        (employmentStatus) =>
-          employmentStatus.value === row.getValue("employmentStatus"),
+      const currentStatus = employmentStatus.find(
+        (status) => status.value === row.getValue("employmentStatus"),
       );
-      if (!userEmploymentStatus) {
+      if (!currentStatus) {
         return null;
       }
-      return <div className="">{userEmploymentStatus.label}</div>;
+      return (
+        <Select
+          defaultValue={currentStatus.value}
+          onValueChange={async (newStatus) => {
+            const response = await changeUserEmploymentStatus({
+              email: row.getValue("email"),
+              status: newStatus as EmploymentStatus,
+            });
+            if (response.error) {
+              toast.error(response.error);
+            } else {
+              toast.success(response.success);
+            }
+          }}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue defaultValue={currentStatus.value} />
+          </SelectTrigger>
+          <SelectContent>
+            {employmentStatus.map((status) => (
+              <SelectItem key={status.value} value={status.value}>
+                <span>{status.label}</span>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      );
     },
     enableSorting: false,
     enableHiding: false,
@@ -203,12 +254,17 @@ export const columns: ColumnDef<UserTableSchema>[] = [
       return (
         <Select
           defaultValue={currentCommittee.value}
-          onValueChange={async (newCommittee) =>
-            await changeUserCommittee({
+          onValueChange={async (newCommittee) => {
+            const response = await changeUserCommittee({
               email: row.getValue("email"),
               committee: newCommittee as CommitteeRole,
-            })
-          }
+            });
+            if (response.error) {
+              toast.error(response.error);
+            } else {
+              toast.success(response.success);
+            }
+          }}
         >
           <SelectTrigger className="w-full">
             <SelectValue defaultValue={currentCommittee.value} />
@@ -228,5 +284,43 @@ export const columns: ColumnDef<UserTableSchema>[] = [
     },
     enableSorting: false,
     enableHiding: false,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant={"destructive"} size={"icon"}>
+            <Trash />
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              user and remove their data from the server.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <Button variant={"destructive"} asChild>
+              <AlertDialogAction
+                onClick={async () => {
+                  const reponse = await deleteUser(row.getValue("email"));
+                  if (reponse.error) {
+                    toast.error(reponse.error);
+                  } else {
+                    toast.success(reponse.success);
+                  }
+                }}
+              >
+                Delete
+              </AlertDialogAction>
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    ),
   },
 ];

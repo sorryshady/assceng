@@ -3,7 +3,6 @@
 import { db } from '@/db'
 
 export const fetchVerifiedUsers = async (userId?: string | null) => {
-    console.log(userId);
     const verifiedUsers = await db.user.findMany({
       where: {
         verifiedStatus: 'VERIFIED',
