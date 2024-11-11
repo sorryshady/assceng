@@ -32,7 +32,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) => table.setGlobalFilter(event.target.value)}
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        <div className="flex flex-1 space-x-2">
+        <div className="flex flex-1 flex-wrap gap-2">
           {table.getColumn("userRole") && (
             <DataTableFacetedFilter
               column={table.getColumn("userRole")}

@@ -184,7 +184,7 @@ const AccountLinks = ({
                 "text-nowrap hover:text-primary text-[15px]",
                 currentPath === "/account" && "text-primary",
               )}
-              href={"/my-account"}
+              href={"/account"}
             >
               My Account
             </Link>
