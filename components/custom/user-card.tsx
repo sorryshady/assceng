@@ -79,15 +79,12 @@ const UserCard = ({ member }: UserCardProps) => {
           />
           <div className="space-y-2">
             <Details label="Email" value={member.email} />
+            <Details label="Phone Number" value={member.mobileNumber} />
             <Details label="Department" value={member.department} />
             <Details label="Working District" value={userDistrict?.label} />
             <Details
               label="Permanent Address"
               value={member.permanentAddress}
-            />
-            <Details
-              label="Phone Number"
-              value={member.phoneNumber}
               classname="pb-6"
             />
           </div>

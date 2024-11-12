@@ -5,6 +5,7 @@ import { registerSchema } from "@/lib/register-schema";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -451,6 +452,9 @@ const RegisterForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Email Address *</FormLabel>
+                      <FormDescription>
+                        This email will be used for account registration.
+                      </FormDescription>
                       <FormControl>
                         <Input placeholder="Enter your email." {...field} />
                       </FormControl>
