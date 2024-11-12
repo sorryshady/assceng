@@ -97,6 +97,8 @@ const RegisterForm = () => {
     } catch (error: any) {
       console.error(JSON.stringify(error.errors[0].message, null, 2));
       toast.error("Failed to submit the form. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -139,40 +141,6 @@ const RegisterForm = () => {
                     <FormItem className="flex flex-col">
                       <FormLabel>Date of birth *</FormLabel>
                       <Input placeholder="dd/mm/yyyy" type="text" {...field} />
-                      {/* <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground",
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            captionLayout="dropdown-buttons"
-                            fromYear={1900}
-                            toYear={new Date().getFullYear()}
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover> */}
                       <FormMessage />
                     </FormItem>
                   )}

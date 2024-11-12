@@ -9,7 +9,7 @@ export const fetchVerifiedUsers = async (userId?: string | null) => {
         ...(userId && { clerkId: { not: userId } }),
       },
     });
-
+    console.log(verifiedUsers.length);
     if (verifiedUsers.length > 0) {
       return verifiedUsers;
     } else {
