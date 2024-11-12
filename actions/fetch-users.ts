@@ -16,3 +16,17 @@ export const fetchVerifiedUsers = async (userId?: string | null) => {
       throw new Error('No verified users found');
     }
   };
+
+export const fetchPendingUsers = async () => {
+    const verifiedUsers = await db.user.findMany({
+      where: {
+        verifiedStatus: 'PENDING',
+      },
+    });
+
+    if (verifiedUsers.length > 0) {
+      return verifiedUsers;
+    } else {
+      throw new Error('No verified users found');
+    }
+  };
