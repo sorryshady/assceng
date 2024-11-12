@@ -10,7 +10,9 @@ const SmoothScrolling = () => {
             node.id === "radix-:Ril7:" ||
             node.id === "mobile-menu" ||
             node.id === "radix-:R2al7:" ||
-            node.id === "faceted-filter"
+            node.id === "faceted-filter" ||
+            node.id === "user-card" ||
+            node.id === "user-card-children"
           );
         },
       }}

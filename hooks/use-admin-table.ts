@@ -3,11 +3,12 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { deleteUser } from "@/actions/admin-actions";
-import { UserTableSchema } from '@/components/admin-table/data/schema'
+import { changeVerificationStatus, deleteUser } from "@/actions/admin-actions";
+import { UserTableSchema } from "@/components/admin-table/data/schema";
+import { PendingTableSchema } from "@/components/pending-table/data/schema";
+import { VerifiedStatus } from '@prisma/client'
 
-
-export const useAdminTable = (initialUsers: UserTableSchema[]) => {
+export const useUserTable = (initialUsers: UserTableSchema[]) => {
   const [users, setUsers] = useState(initialUsers);
 
   const handleDeleteUser = async (email: string) => {
@@ -26,4 +27,20 @@ export const useAdminTable = (initialUsers: UserTableSchema[]) => {
   };
 
   return { users, handleDeleteUser };
+};
+export const usePendingTable = (initialUsers: PendingTableSchema[]) => {
+  const [pendingUsers, setPendingUsers] = useState(initialUsers);
+  const handleVerification = async (email: string, status: VerifiedStatus) => {
+    const updatedUsers = pendingUsers.filter((user) => user.email !== email);
+    setPendingUsers(updatedUsers);
+    const response = await changeVerificationStatus({email, status});
+    if (response.error) {
+        setPendingUsers(initialUsers);
+        toast.error(response.error);
+      } else {
+        toast.success("User verification status updated successfully!");
+      }
+  };
+
+  return { pendingUsers, handleVerification };
 };

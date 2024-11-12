@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { CommitteeRole, EmploymentStatus, UserRole } from "@prisma/client";
+import { CommitteeRole, EmploymentStatus, UserRole, VerifiedStatus } from "@prisma/client";
 import { clerkClient } from "@clerk/nextjs/server";
 
 interface Props {
@@ -48,6 +48,22 @@ export async function changeUserCommittee({ email, committee }: CommitteProps) {
       data: { committeeStatus: committee },
     });
     return { success: "Updated user committee to " + committee };
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to update user committee" };
+  }
+}
+interface CommitteeProps {
+    email: string;
+    status: VerifiedStatus;
+  }
+export async function changeVerificationStatus({ email, status }: CommitteeProps) {
+  try {
+    await db.user.update({
+      where: { email: email },
+      data: { verifiedStatus: status },
+    });
+    return { success: "Updated user committee to " + status };
   } catch (error) {
     console.error(error);
     return { error: "Failed to update user committee" };

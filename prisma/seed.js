@@ -11,9 +11,23 @@ const clerkClient = createClerkClient({
 
 const testUsers = [];
 async function main() {
+  // DELETE USERS
+  //   const users = await fetch("https://api.clerk.dev/v1/users", {
+  //     headers: {
+  //       Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
+  //     },
+  //   }).then((res) => res.json());
+
+  //   const userIds = users.map((user) => user.id);
+  //   console.log(userIds);
+  //   for (let i = 0; i < userIds.length; i++) {
+  //     await clerkClient.users.deleteUser(userIds[i]);
+  //   }
+
+  //   CREATE USERS
   for (let i = 0; i < 20; i++) {
     const email = faker.internet.email();
-    const password = faker.internet.password(); // Adjust minimum length as needed
+    const password = faker.internet.password();
     const clerkUser = await clerkClient.users.createUser({
       emailAddress: [email],
       password: password,
@@ -74,6 +88,7 @@ async function main() {
           "KNR",
           "KSD",
         ]),
+        phoneNumber: faker.phone.number("##########"),
         mobileNumber: faker.phone.number("##########"),
         bloodGroup: faker.helpers.arrayElement([
           "A+",
