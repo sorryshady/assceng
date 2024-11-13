@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { UserTableSchema } from "../data/schema";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import {
@@ -11,23 +10,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+// import { DataTableColumnHeader } from "./data-table-column";
 import {
-  committeeStatus,
-  department,
-  designation,
-  employmentStatus,
-  gender,
-  userRole,
-} from "../data/data";
-import { DataTableColumnHeader } from "./data-table-column";
-import {
-  changeUserCommittee,
   changeUserEmploymentStatus,
   changeUserRole,
+  changeVerificationStatus,
   deleteUser,
 } from "@/actions/admin-actions";
-import { CommitteeRole, EmploymentStatus, UserRole } from "@prisma/client";
-import { getDistrictFullName } from "@/lib/district-mapping";
+import { EmploymentStatus, UserRole, VerifiedStatus } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { toast } from "sonner";
@@ -42,10 +33,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { PendingUserSchema, VerifiedUsersSchema } from "../data/tableSchema";
+import { DataTableColumnHeader } from "./data-table-column";
+import {
+  department,
+  designation,
+  employmentStatus,
+  userRole,
+  verifiedStatus,
+} from "../data/data";
 
-export const columns = (
-  handleDeleteUser: (email: string) => Promise<void>,
-): ColumnDef<UserTableSchema>[] => [
+export const pendingColumns: ColumnDef<PendingUserSchema>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -139,43 +137,6 @@ export const columns = (
     enableHiding: false,
   },
   {
-    accessorKey: "workingDistrict",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Working District" />
-    ),
-    cell: ({ row }) => (
-      <div className="truncate w-32">
-        {getDistrictFullName(row.getValue("workingDistrict"))}
-      </div>
-    ),
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "gender",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Gender" />
-    ),
-    cell: ({ row }) => {
-      const userGender = gender.find(
-        (gender) => gender.value === row.getValue("gender"),
-      );
-      if (!userGender) {
-        return null;
-      }
-      return <div className="">{userGender.label}</div>;
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
-
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "designation",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Designation" />
@@ -262,24 +223,24 @@ export const columns = (
     enableHiding: false,
   },
   {
-    accessorKey: "committeeStatus",
+    accessorKey: "verifiedStatus",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Committee" />
+      <DataTableColumnHeader column={column} title="Verified Status" />
     ),
     cell: ({ row }) => {
-      const currentCommittee = committeeStatus.find(
-        (status) => status.value === row.getValue("committeeStatus"),
+      const currentStatus = verifiedStatus.find(
+        (status) => status.value === row.getValue("verifiedStatus"),
       );
-      if (!currentCommittee) {
+      if (!currentStatus) {
         return null;
       }
       return (
         <Select
-          defaultValue={currentCommittee.value}
-          onValueChange={async (newCommittee) => {
-            const response = await changeUserCommittee({
+          defaultValue={currentStatus.value}
+          onValueChange={async (newStatus) => {
+            const response = await changeVerificationStatus({
               email: row.getValue("email"),
-              committee: newCommittee as CommitteeRole,
+              status: newStatus as VerifiedStatus,
             });
             if (response.error) {
               toast.error(response.error);
@@ -289,10 +250,10 @@ export const columns = (
           }}
         >
           <SelectTrigger className="w-full">
-            <SelectValue defaultValue={currentCommittee.value} />
+            <SelectValue defaultValue={currentStatus.value} />
           </SelectTrigger>
           <SelectContent>
-            {committeeStatus.map((status) => (
+            {verifiedStatus.map((status) => (
               <SelectItem key={status.value} value={status.value}>
                 <span>{status.label}</span>
               </SelectItem>
@@ -306,38 +267,5 @@ export const columns = (
     },
     enableSorting: false,
     enableHiding: false,
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => (
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button variant={"outline"} size={"icon"}>
-            <Trash />
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              user and remove their data from the server.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button variant={"destructive"} asChild>
-              <AlertDialogAction
-                onClick={async () =>
-                  await handleDeleteUser(row.getValue("email"))
-                }
-              >
-                Delete
-              </AlertDialogAction>
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    ),
   },
 ];

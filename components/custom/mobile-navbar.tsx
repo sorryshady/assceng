@@ -236,7 +236,6 @@ const AccountLinks = ({
   useEffect(() => {
     setIsLoggedIn(!!userName);
   }, [userName]);
-  console.log(isLoggedIn);
 
   return (
     <>

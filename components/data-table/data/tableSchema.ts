@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const userTableSchema = z.object({
+export const verifedUsersSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   department: z.enum(["LSGD", "PWD", "IRRIGATION"]),
@@ -33,4 +33,21 @@ export const userTableSchema = z.object({
   userRole: z.enum(["REGULAR", "ADMIN"]),
 });
 
-export type UserTableSchema = z.infer<typeof userTableSchema>;
+export const pendingUsersSchema = z.object({
+    name: z.string(),
+    email: z.string().email(),
+    employmentStatus: z.enum(["WORKING", "RETIRED", "EXPIRED"]),
+    department: z.enum(["LSGD", "PWD", "IRRIGATION"]),
+    designation: z.enum([
+      "ASSISTANT_ENGINEER",
+      "ASSISTANT_EXECUTIVE_ENGINEER",
+      "EXECUTIVE_ENGINEER",
+      "SUPERINTENDING_ENGINEER",
+      "CHIEF_ENGINEER",
+    ]),
+    verifiedStatus: z.enum(["PENDING", "VERIFIED", "REJECTED"]),
+    userRole: z.enum(["REGULAR", "ADMIN"]),
+})
+
+export type VerifiedUsersSchema = z.infer<typeof verifedUsersSchema>;
+export type PendingUserSchema = z.infer<typeof pendingUsersSchema>;

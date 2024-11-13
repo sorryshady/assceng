@@ -3,10 +3,11 @@ import Wrapper from "@/components/custom/wrapper";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { fetchVerifiedUsers, fetchPendingUsers } from "@/actions/fetch-users";
-import AdminTableClient from "@/components/admin-table/components/admin-table-client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import PendingTableClient from "@/components/pending-table/components/pending-table-client";
+import { DataTable } from "@/components/data-table/components/data-table";
+import { verifiedColumns } from "@/components/data-table/components/verifiedColumns";
+import { pendingColumns } from "@/components/data-table/components/pendingColumns";
 
 export default async function Admin() {
   const { userId } = await auth();
@@ -35,12 +36,20 @@ export default async function Admin() {
           </TabsList>
           <TabsContent value="general">
             <Card className="p-4 pt-8">
-              <AdminTableClient initialUsers={users} />
+              <DataTable
+                data={users}
+                columns={verifiedColumns}
+                tab={"general"}
+              />
             </Card>
           </TabsContent>
           <TabsContent value="pending">
             <Card className="p-4 pt-8">
-              <PendingTableClient initialUsers={pendingUsers} />
+              <DataTable
+                data={pendingUsers}
+                columns={pendingColumns}
+                tab={"pending"}
+              />
             </Card>
           </TabsContent>
           <TabsContent value="cms">
