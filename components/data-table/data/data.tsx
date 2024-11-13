@@ -160,3 +160,17 @@ export const committeeStatus = [
     label: "None",
   },
 ];
+export const verifiedStatus = [
+  {
+    value: "REJECTED",
+    label: "Rejected",
+  },
+  {
+    value: "PENDING",
+    label: "Pending",
+  },
+  {
+    value: "VERIFIED",
+    label: "Verified",
+  },
+];

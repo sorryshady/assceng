@@ -17,10 +17,12 @@ import { X } from "lucide-react";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  tab: "general" | "pending";
 }
 
 export function DataTableToolbar<TData>({
   table,
+  tab,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   return (
@@ -40,14 +42,14 @@ export function DataTableToolbar<TData>({
               options={userRole}
             />
           )}
-          {table.getColumn("workingDistrict") && (
+          {tab === "general" && table.getColumn("workingDistrict") && (
             <DataTableFacetedFilter
               column={table.getColumn("workingDistrict")}
               title="Working District"
               options={workingDistrict}
             />
           )}
-          {table.getColumn("gender") && (
+          {tab === "general" && table.getColumn("gender") && (
             <DataTableFacetedFilter
               column={table.getColumn("gender")}
               title="Gender"
@@ -75,7 +77,7 @@ export function DataTableToolbar<TData>({
               options={employmentStatus}
             />
           )}
-          {table.getColumn("committeeStatus") && (
+          {tab === "general" && table.getColumn("committeeStatus") && (
             <DataTableFacetedFilter
               column={table.getColumn("committeeStatus")}
               title="Committee"

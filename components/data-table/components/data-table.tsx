@@ -24,16 +24,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
+import { DataTableToolbar } from "./data-table-toolbar";
 import { DataTablePagination } from "./data-table-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  tab: "general" | "pending";
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  tab,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -81,7 +84,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      {/* <DataTableToolbar table={table} /> */}
+      <DataTableToolbar table={table} tab={tab} />
       <div className="rounded-md border">
         <Table className="overflow-x-auto">
           <TableHeader>
@@ -132,7 +135,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      {/* <DataTablePagination table={table} /> */}
+      <DataTablePagination table={table} />
     </div>
   );
 }

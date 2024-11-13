@@ -9,24 +9,23 @@ export const fetchVerifiedUsers = async (userId?: string | null) => {
         ...(userId && { clerkId: { not: userId } }),
       },
     });
-    console.log(verifiedUsers.length);
     if (verifiedUsers.length > 0) {
       return verifiedUsers;
     } else {
-      throw new Error('No verified users found');
+      return [];
     }
   };
 
 export const fetchPendingUsers = async () => {
-    const verifiedUsers = await db.user.findMany({
+    const pendingUsers = await db.user.findMany({
       where: {
         verifiedStatus: 'PENDING',
       },
     });
 
-    if (verifiedUsers.length > 0) {
-      return verifiedUsers;
+    if (pendingUsers.length > 0) {
+      return pendingUsers;
     } else {
-      throw new Error('No verified users found');
+      return [];
     }
   };

@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { UserTableSchema } from "../data/schema";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import {
@@ -11,15 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  committeeStatus,
-  department,
-  designation,
-  employmentStatus,
-  gender,
-  userRole,
-} from "../data/data";
-import { DataTableColumnHeader } from "./data-table-column";
+
+// import { DataTableColumnHeader } from "./data-table-column";
 import {
   changeUserCommittee,
   changeUserEmploymentStatus,
@@ -42,10 +34,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { VerifiedUsersSchema } from "../data/tableSchema";
+import { DataTableColumnHeader } from "./data-table-column";
+import {
+  committeeStatus,
+  department,
+  designation,
+  employmentStatus,
+  gender,
+  userRole,
+} from "../data/data";
 
-export const columns = (
+export const verifiedColumns = (
   handleDeleteUser: (email: string) => Promise<void>,
-): ColumnDef<UserTableSchema>[] => [
+): ColumnDef<VerifiedUsersSchema>[] => [
   {
     id: "select",
     header: ({ table }) => (
