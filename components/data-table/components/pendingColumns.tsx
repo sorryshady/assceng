@@ -43,7 +43,9 @@ import {
   verifiedStatus,
 } from "../data/data";
 
-export const pendingColumns: ColumnDef<PendingUserSchema>[] = [
+export const pendingColumns = (
+  handleVerification: (email: string, status: VerifiedStatus) => Promise<void>,
+): ColumnDef<PendingUserSchema>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -237,17 +239,23 @@ export const pendingColumns: ColumnDef<PendingUserSchema>[] = [
       return (
         <Select
           defaultValue={currentStatus.value}
-          onValueChange={async (newStatus) => {
-            const response = await changeVerificationStatus({
-              email: row.getValue("email"),
-              status: newStatus as VerifiedStatus,
-            });
-            if (response.error) {
-              toast.error(response.error);
-            } else {
-              toast.success(response.success);
-            }
-          }}
+          onValueChange={async (newStatus) =>
+            await handleVerification(
+              row.getValue("email"),
+              newStatus as VerifiedStatus,
+            )
+          }
+          //   onValueChange={async (newStatus) => {
+          //     const response = await changeVerificationStatus({
+          //       email: row.getValue("email"),
+          //       status: newStatus as VerifiedStatus,
+          //     });
+          //     if (response.error) {
+          //       toast.error(response.error);
+          //     } else {
+          //       toast.success(response.success);
+          //     }
+          //   }}
         >
           <SelectTrigger className="w-full">
             <SelectValue defaultValue={currentStatus.value} />

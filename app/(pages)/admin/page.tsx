@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { DataTable } from "@/components/data-table/components/data-table";
 import { verifiedColumns } from "@/components/data-table/components/verifiedColumns";
 import { pendingColumns } from "@/components/data-table/components/pendingColumns";
+import TableClient from "@/components/data-table/components/table-client";
 
 export default async function Admin() {
   const { userId } = await auth();
@@ -16,8 +17,6 @@ export default async function Admin() {
   if (adminUser.userRole !== "ADMIN") {
     redirect("/");
   }
-  const users = await fetchVerifiedUsers(userId);
-  const pendingUsers = await fetchPendingUsers();
   return (
     <Wrapper>
       <div className="h-full flex flex-1 flex-col space-y-8 p-8">
@@ -36,20 +35,17 @@ export default async function Admin() {
           </TabsList>
           <TabsContent value="general">
             <Card className="p-4 pt-8">
-              <DataTable
+              <TableClient tab="general" />
+              {/* <DataTable
                 data={users}
                 columns={verifiedColumns}
                 tab={"general"}
-              />
+              /> */}
             </Card>
           </TabsContent>
           <TabsContent value="pending">
             <Card className="p-4 pt-8">
-              <DataTable
-                data={pendingUsers}
-                columns={pendingColumns}
-                tab={"pending"}
-              />
+              <TableClient tab="pending" />
             </Card>
           </TabsContent>
           <TabsContent value="cms">

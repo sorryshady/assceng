@@ -6,8 +6,13 @@ import { toast } from "sonner";
 import { deleteUser } from "@/actions/admin-actions";
 import { VerifiedUsersSchema } from "@/components/data-table/data/tableSchema";
 
-export const useUserTable = (initialUsers: VerifiedUsersSchema[]) => {
+export const useDeleteUser = (
+  initialUsers: VerifiedUsersSchema[] | undefined,
+) => {
   const [users, setUsers] = useState(initialUsers);
+  if (!users) {
+    return { users, handleDeleteUser: () => {} };
+  }
 
   const handleDeleteUser = async (email: string) => {
     // Optimistic UI update

@@ -12,9 +12,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { designation, workingDistrict } from "../admin-table/data/data";
 import { ScrollArea } from "../ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { designation, workingDistrict } from "../data-table/data/data";
 
 interface UserCardProps {
   member: User;

@@ -45,7 +45,9 @@ import {
   userRole,
 } from "../data/data";
 
-export const verifiedColumns: ColumnDef<VerifiedUsersSchema>[] = [
+export const verifiedColumns = (
+  handleDeleteUser: (email: string) => Promise<void>,
+): ColumnDef<VerifiedUsersSchema>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -328,9 +330,9 @@ export const verifiedColumns: ColumnDef<VerifiedUsersSchema>[] = [
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <Button variant={"destructive"} asChild>
               <AlertDialogAction
-              // onClick={async () =>
-              //   await handleDeleteUser(row.getValue("email"))
-              // }
+                onClick={async () =>
+                  await handleDeleteUser(row.getValue("email"))
+                }
               >
                 Delete
               </AlertDialogAction>
