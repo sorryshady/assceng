@@ -29,12 +29,7 @@ import {
   employmentStatus,
   gender,
 } from "@/lib/data-arrays";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "../ui/calendar";
 import { toast } from "sonner";
 import { useState } from "react";
 import Link from "next/link";
@@ -132,7 +127,6 @@ const RegisterForm = () => {
                     </FormItem>
                   )}
                 />
-                <div className="grid lg:grid-cols-2 grid-cols-1"></div>
                 <FormField //date of birth
                   control={form.control}
                   disabled={isSubmitting}

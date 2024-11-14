@@ -2,12 +2,8 @@ import { verifyClerkUser } from "@/actions/verify-clerk-user";
 import Wrapper from "@/components/custom/wrapper";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { fetchVerifiedUsers, fetchPendingUsers } from "@/actions/fetch-users";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { DataTable } from "@/components/data-table/components/data-table";
-import { verifiedColumns } from "@/components/data-table/components/verifiedColumns";
-import { pendingColumns } from "@/components/data-table/components/pendingColumns";
 import TableClient from "@/components/data-table/components/table-client";
 
 export default async function Admin() {

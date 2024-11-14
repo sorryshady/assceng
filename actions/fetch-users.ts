@@ -1,31 +1,37 @@
-'use server'
+"use server";
 
-import { db } from '@/db'
+import { db } from "@/db";
 
-export const fetchVerifiedUsers = async (userId?: string | null) => {
-    const verifiedUsers = await db.user.findMany({
-      where: {
-        verifiedStatus: 'VERIFIED',
-        ...(userId && { clerkId: { not: userId } }),
-      },
-    });
-    if (verifiedUsers.length > 0) {
-      return verifiedUsers;
-    } else {
-      return [];
-    }
-  };
+export async function fetchVerifiedUsers(userId: string | null | undefined) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_URL}/api/admin/verified`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId }),
+    },
+  );
 
-export const fetchPendingUsers = async () => {
-    const pendingUsers = await db.user.findMany({
-      where: {
-        verifiedStatus: 'PENDING',
-      },
-    });
+  if (!response.ok) {
+    throw new Error("Failed to fetch verified users");
+  }
 
-    if (pendingUsers.length > 0) {
-      return pendingUsers;
-    } else {
-      return [];
-    }
-  };
+  return response.json();
+}
+
+export const fetchPendingUsers = async (userId: string | null | undefined) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_URL}/api/admin/pending`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch pending users");
+  }
+
+  return response.json();
+};

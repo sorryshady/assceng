@@ -21,14 +21,14 @@ const TableClient = ({ tab }: TableClientProps) => {
   const { userId } = useAuth();
   const [verified, setVerified] = useState<VerifiedUsersSchema[]>();
   const [pending, setPending] = useState<PendingUserSchema[]>();
-  
+
   useEffect(() => {
     const fetchData = async () => {
       if (tab === "general") {
         const users = await fetchVerifiedUsers(userId);
         setVerified(users);
       } else if (tab === "pending") {
-        const users = await fetchPendingUsers();
+        const users = await fetchPendingUsers(userId);
         setPending(users);
       }
     };
@@ -61,13 +61,6 @@ const TableClient = ({ tab }: TableClientProps) => {
       toast.success("User verification status updated successfully!");
     }
   };
-  let columnsWithDelete;
-  let columnsWithVerification;
-  if (tab === "general") {
-    columnsWithDelete = verifiedColumns(handleDeleteUser);
-  } else if (tab === "pending") {
-    columnsWithVerification = pendingColumns(handleVerification);
-  }
   if (verified === undefined && pending === undefined) {
     return (
       <div className="flex flex-col gap-2 justify-center items-center">
@@ -78,14 +71,18 @@ const TableClient = ({ tab }: TableClientProps) => {
   }
   return (
     <>
-      {tab === "general" && verified && columnsWithDelete && (
-        <DataTable data={verified} columns={columnsWithDelete} tab="general" />
+      {tab === "general" && verified && (
+        <DataTable
+          data={verified}
+          columns={verifiedColumns(handleDeleteUser)}
+          tab="general"
+        />
       )}
       {}
-      {tab === "pending" && pending && columnsWithVerification && (
+      {tab === "pending" && pending && (
         <DataTable
           data={pending}
-          columns={columnsWithVerification}
+          columns={pendingColumns(handleVerification)}
           tab="pending"
         />
       )}
